@@ -1,0 +1,43 @@
+{% extends 'base/base.html' %}
+{% block title %}Welcome Back{% endblock title %}
+
+{% block content %}
+<div class="max-w-md mx-auto">
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-8">
+        <div class="text-center mb-8">
+            <h2 class="text-3xl font-bold">Welcome Back</h2>
+            <p class="text-gray-600 dark:text-gray-400 mt-2">Sign in to your account</p>
+        </div>
+        
+        <form method="post" class="space-y-6">
+            {% csrf_token %}
+            
+            {% for field in form %}
+            <div>
+                <label class="block text-sm font-medium mb-2" for="{{ field.id_for_label }}">
+                    {{ field.label }}
+                </label>
+                {{ field }}
+                {% if field.name == 'username' %}
+                <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">You can use either your username or email address</p>
+                {% endif %}
+                {% for error in field.errors %}
+                <p class="text-sm text-red-600 mt-1">{{ error }}</p>
+                {% endfor %}
+            </div>
+            {% endfor %}
+            
+            <button type="submit" class="w-full py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors">Sign In</button>
+            
+            <div class="text-center space-y-2">
+                <p class="text-sm">
+                    <a href="{% url 'password_reset' %}" class="text-blue-600 hover:text-blue-700">Forgot your password?</a>
+                </p>
+                <p class="text-sm">Don't have an account? 
+                    <a href="{% url 'accounts:register' %}" class="text-blue-600 hover:text-blue-700 font-medium">Start here</a>
+                </p>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock content %}

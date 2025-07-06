@@ -1,0 +1,96 @@
+<nav class="bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-800 sticky top-0 z-50">
+    <div class="container mx-auto px-4">
+        <div class="flex justify-between items-center h-16">
+            <div class="flex items-center">
+                <a class="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent" href="{% url 'core:home' %}">
+                    🚀 Project
+                </a>
+            </div>
+            
+            <div class="hidden md:flex items-center space-x-1">
+                <a href="{% url 'core:home' %}" 
+                   class="px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors {% if request.resolver_match.url_name == 'home' %}bg-gray-100 dark:bg-gray-800{% endif %}">
+                    Home
+                </a>
+                <a href="{% url 'core:about' %}" 
+                   class="px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors {% if request.resolver_match.url_name == 'about' %}bg-gray-100 dark:bg-gray-800{% endif %}">
+                    About
+                </a>
+                {% if user.is_authenticated and user.is_staff %}
+                <a href="{% url 'projects:dashboard' %}" 
+                   class="px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors {% if 'projects' in request.resolver_match.namespace %}bg-gray-100 dark:bg-gray-800{% endif %}">
+                    Dashboard
+                </a>
+                <a href="{% url 'projects:project_list' %}" 
+                   class="px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+                    Projects
+                </a>
+                {% endif %}
+            </div>
+            
+            <div class="flex items-center space-x-2">
+                <!-- Theme Toggle -->
+                <button x-on:click="isDark = !isDark" class="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+                    <svg x-show="!isDark" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                    </svg>
+                    <svg x-show="isDark" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                    </svg>
+                </button>
+                
+                {% if user.is_authenticated %}
+                    <!-- User Menu -->
+                    <div class="relative" x-data="{ open: false }">
+                        <button @click="open = !open" class="flex items-center space-x-2 p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+                            <div class="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 text-white flex items-center justify-center text-sm font-bold">
+                                {% if user.profile_picture %}
+                                    <img src="{{ user.profile_picture.url }}" alt="{{ user.username }}'s profile" class="w-8 h-8 rounded-full" />
+                                {% else %}
+                                    {{ user.first_name.0|default:user.username.0|upper }}
+                                {% endif %}
+                            </div>
+                        </button>
+                        
+                        <div x-show="open" @click.away="open = false" x-transition class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg border border-gray-200 dark:border-gray-700">
+                            <div class="p-3 border-b border-gray-200 dark:border-gray-700">
+                                <p class="font-medium">{{ user.first_name|default:user.username }}</p>
+                                <p class="text-sm text-gray-600 dark:text-gray-400">{{ user.email }}</p>
+                                {% if user.is_staff %}
+                                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200 mt-1">
+                                    {{ user.level_display }}
+                                </span>
+                                {% endif %}
+                            </div>
+                            <div class="py-1">
+                                <a href="{% url 'accounts:profile' %}" class="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700">Profile</a>
+                                <a href="{% url 'accounts:profile_edit' %}" class="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700">Edit Profile</a>
+                                <a href="{% url 'password_change' %}" class="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700">Change Password</a>
+                                {% if user.is_staff %}
+                                    <a href="{% url 'projects:dashboard' %}" class="block px-4 py-2 text-sm text-blue-600 hover:bg-gray-100 dark:hover:bg-gray-700">Project Dashboard</a>
+                                    <a href="{% url 'admin:index' %}" class="block px-4 py-2 text-sm text-orange-600 hover:bg-gray-100 dark:hover:bg-gray-700">Admin Panel</a>
+                                {% endif %}
+                                <form method="post" action="{% url 'logout' %}" class="border-t border-gray-200 dark:border-gray-700 mt-1 pt-1">
+                                    {% csrf_token %}
+                                    <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100 dark:hover:bg-gray-700">Sign Out</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="flex items-center space-x-2">
+                        <a href="{% url 'accounts:login' %}" class="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">Sign In</a>
+                        <a href="{% url 'accounts:register' %}" class="px-4 py-2 text-sm font-medium bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors">Get Started</a>
+                    </div>
+                {% endif %}
+                
+                <!-- Mobile Menu Button -->
+                <button class="md:hidden p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+</nav>

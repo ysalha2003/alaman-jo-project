@@ -1,0 +1,40 @@
+{% extends 'base/base.html' %}
+{% block title %}Create Account{% endblock title %}
+
+{% block content %}
+<div class="max-w-md mx-auto">
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-8">
+        <div class="text-center mb-8">
+            <h2 class="text-3xl font-bold">Join Us Today</h2>
+            <p class="text-gray-600 dark:text-gray-400 mt-2">Create your account to get started</p>
+        </div>
+        
+        <form method="post" class="space-y-6">
+            {% csrf_token %}
+            
+            {% for field in form %}
+            <div>
+                <label class="block text-sm font-medium mb-2" for="{{ field.id_for_label }}">
+                    {{ field.label }}
+                </label>
+                {{ field }}
+                {% if field.help_text %}
+                <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">{{ field.help_text|safe }}</p>
+                {% endif %}
+                {% for error in field.errors %}
+                <p class="text-sm text-red-600 mt-1">{{ error }}</p>
+                {% endfor %}
+            </div>
+            {% endfor %}
+            
+            <button type="submit" class="w-full py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors">Create Account</button>
+            
+            <div class="text-center">
+                <p class="text-sm">Already have an account? 
+                    <a href="{% url 'accounts:login' %}" class="text-blue-600 hover:text-blue-700 font-medium">Sign in here</a>
+                </p>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock content %}

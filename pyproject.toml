@@ -1,0 +1,49 @@
+[project]
+name = "boilerplate"
+version = "1.0.0"
+description = "Modern Django + Tailwind CSS boilerplate"
+authors = [{name = "Yaser", email = "yaser.salha.se@gmail.com"}]
+readme = "README.md"
+requires-python = ">=3.11"
+license = {text = "MIT"}
+
+dependencies = [
+    "Django>=5.1,<5.2",
+    "python-decouple>=3.8",
+    "Pillow>=10.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "django-debug-toolbar>=4.4.0",
+    "pytest>=8.0.0",
+    "pytest-django>=4.8.0",
+    "coverage>=7.4.0",
+    "black>=24.0.0",
+    "ruff>=0.3.0",
+    "pre-commit>=3.7.0",
+]
+
+production = [
+    "gunicorn>=21.2.0",
+    "psycopg2-binary>=2.9.9",
+    "whitenoise[brotli]>=6.6.0",
+    "sentry-sdk>=1.40.0",
+    "django-unfold>=0.38.0",
+]
+
+[tool.black]
+line-length = 88
+target-version = ['py311']
+
+[tool.ruff]
+line-length = 88
+target-version = "py311"
+
+[tool.coverage.run]
+source = "."
+omit = ["*/migrations/*", "*/venv/*", "manage.py", "config/*"]
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "config.settings"
+python_files = ["tests.py", "test_*.py", "*_tests.py"]

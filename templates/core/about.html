@@ -1,0 +1,37 @@
+{% extends 'base/base.html' %}
+{% block title %}About{% endblock title %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-8">
+        <h1 class="text-4xl font-bold mb-6 text-center">About This Project</h1>
+        
+        <div class="prose dark:prose-invert max-w-none">
+            <p class="text-lg text-gray-600 dark:text-gray-400 mb-6">
+                Welcome to the Django + Tailwind CSS Boilerplate! This project provides a modern, 
+                robust foundation for building web applications with Django.
+            </p>
+            
+            <h2>Key Features</h2>
+            <ul class="space-y-2">
+                <li><strong>Modern Stack:</strong> Django 5.1+, Tailwind CSS 3.4+, and DaisyUI 4+</li>
+                <li><strong>Custom User Model:</strong> Extensible user model ready from the start</li>
+                <li><strong>Full Authentication:</strong> Complete styled flows for user management</li>
+                <li><strong>Themeable UI:</strong> Light/Dark mode and theme switching built-in</li>
+                <li><strong>Production Ready:</strong> Security and deployment best practices</li>
+            </ul>
+
+            <h2>Philosophy</h2>
+            <p>
+                We believe a good boilerplate should get out of your way and let you focus on 
+                what makes your application unique. This setup prioritizes best practices, 
+                security, and developer experience.
+            </p>
+        </div>
+
+        <div class="flex justify-center mt-8">
+            <a href="{% url 'core:home' %}" class="px-6 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors">Back to Home</a>
+        </div>
+    </div>
+</div>
+{% endblock content %}

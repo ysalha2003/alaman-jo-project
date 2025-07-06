@@ -1,0 +1,304 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Change Domain - {{ project.app_name }}{% endblock title %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto animate-fade-in space-y-6">
+    <!-- Header -->
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+        <div class="text-center">
+            <div class="w-12 h-12 bg-gradient-to-r from-green-500 to-blue-500 rounded-lg flex items-center justify-center mx-auto mb-4">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                </svg>
+            </div>
+            <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">Change Domain</h1>
+            <div class="space-y-1">
+                <p class="text-lg font-medium text-gray-900 dark:text-gray-100">{{ project.app_name }}</p>
+                <p class="text-sm text-gray-600 dark:text-gray-400 font-mono">{{ project.project_id }}</p>
+                <p class="text-xs text-gray-500">Owned by {{ project.user.username }}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+        <!-- Main Form Section -->
+        <div class="xl:col-span-2 space-y-6">
+            <!-- Current Status -->
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+                <h2 class="text-base font-semibold text-gray-900 dark:text-gray-100 mb-4 flex items-center">
+                    <svg class="w-4 h-4 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    Current Domain Status
+                </h2>
+                
+                <div class="space-y-4">
+                    <!-- Local Database URL -->
+                    <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+                        <div class="flex items-center justify-between">
+                            <div class="flex-1 min-w-0">
+                                <p class="text-sm font-medium text-blue-800 dark:text-blue-200 mb-1">💾 Local Database (Cached)</p>
+                                <p class="text-blue-700 dark:text-blue-300 break-all font-mono text-sm">{{ current_status.local_url }}</p>
+                            </div>
+                            <a href="{{ current_status.local_url }}" target="_blank" class="ml-3 inline-flex items-center p-2 bg-blue-100 dark:bg-blue-800 rounded-lg hover:bg-blue-200 dark:hover:bg-blue-700 transition-colors">
+                                <svg class="w-4 h-4 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Firebase Remote Config URL -->
+                    {% if current_status.firebase_enabled %}
+                        {% if current_status.firebase_url %}
+                        <div class="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-4">
+                            <div class="flex items-center justify-between">
+                                <div class="flex-1 min-w-0">
+                                    <p class="text-sm font-medium text-green-800 dark:text-green-200 mb-1">🔥 Firebase Remote Config (Source of Truth)</p>
+                                    <p class="text-green-700 dark:text-green-300 break-all font-mono text-sm">{{ current_status.firebase_url }}</p>
+                                    <p class="text-xs text-green-600 dark:text-green-400 mt-1">This is what mobile apps actually use</p>
+                                </div>
+                                <a href="{{ current_status.firebase_url }}" target="_blank" class="ml-3 inline-flex items-center p-2 bg-green-100 dark:bg-green-800 rounded-lg hover:bg-green-200 dark:hover:bg-green-700 transition-colors">
+                                    <svg class="w-4 h-4 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                        {% else %}
+                        <div class="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4">
+                            <div class="flex">
+                                <svg class="w-5 h-5 text-yellow-600 dark:text-yellow-400 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16c-.77.833.192 2.5 1.732 2.5z" />
+                                </svg>
+                                <div>
+                                    <p class="font-medium text-yellow-800 dark:text-yellow-200">🔥 Firebase Remote Config</p>
+                                    <p class="text-sm text-yellow-700 dark:text-yellow-300 mt-1">No URL configured in Firebase yet</p>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        {% if current_status.firebase_error %}
+                        <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
+                            <div class="flex">
+                                <svg class="w-5 h-5 text-red-600 dark:text-red-400 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16c-.77.833.192 2.5 1.732 2.5z" />
+                                </svg>
+                                <div>
+                                    <p class="font-medium text-red-800 dark:text-red-200">Firebase Connection Error</p>
+                                    <p class="text-sm text-red-700 dark:text-red-300 mt-1">{{ current_status.firebase_error }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                    {% else %}
+                    <div class="bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg p-4">
+                        <div class="flex">
+                            <svg class="w-5 h-5 text-gray-500 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192L5.636 18.364M12 12h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <div>
+                                <p class="font-medium text-gray-600 dark:text-gray-300">Firebase Remote Config Not Configured</p>
+                                <p class="text-sm text-gray-500 mt-1">Mobile apps may not get automatic updates</p>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Change Domain Form -->
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+                <h2 class="text-base font-semibold text-gray-900 dark:text-gray-100 mb-4">Set New Domain</h2>
+                
+                <form method="post" class="space-y-6">
+                    {% csrf_token %}
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" for="{{ form.new_url.id_for_label }}">
+                            <svg class="w-4 h-4 inline mr-1 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                            </svg>
+                            New Domain URL *
+                        </label>
+                        {{ form.new_url }}
+                        {% for error in form.new_url.errors %}
+                        <p class="text-sm text-red-600 mt-1 flex items-center">
+                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16c-.77.833.192 2.5 1.732 2.5z" />
+                            </svg>
+                            {{ error }}
+                        </p>
+                        {% endfor %}
+                        <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                            Enter the new URL you want to set. This will update both local database and Firebase Remote Config.
+                        </p>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" for="{{ form.reason.id_for_label }}">
+                            <svg class="w-4 h-4 inline mr-1 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v9a2 2 0 01-2 2h-1M9 12l2 2 4-4" />
+                            </svg>
+                            Reason for Change
+                        </label>
+                        {{ form.reason }}
+                        {% for error in form.reason.errors %}
+                        <p class="text-sm text-red-600 mt-1">{{ error }}</p>
+                        {% endfor %}
+                        <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                            Optional: Explain why you're changing the domain
+                        </p>
+                    </div>
+
+                    <!-- What Will Happen -->
+                    <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+                        <h4 class="font-medium text-blue-800 dark:text-blue-200 mb-2">What will happen when you submit:</h4>
+                        <ul class="text-sm text-blue-700 dark:text-blue-300 space-y-1">
+                            <li>✅ Local database will be updated with new URL</li>
+                            {% if current_status.firebase_enabled %}
+                            <li>🔥 Firebase Remote Config will be updated with new URL</li>
+                            <li>📱 Mobile apps will fetch the new URL from Firebase</li>
+                            {% else %}
+                            <li>⚠️ Firebase Remote Config is not configured - mobile apps may not get updates</li>
+                            {% endif %}
+                            <li>📝 Change will be logged with timestamp and reason</li>
+                        </ul>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="flex flex-col sm:flex-row gap-3 pt-4 border-t border-gray-200 dark:border-gray-700">
+                        <button type="submit" class="flex-1 inline-flex items-center justify-center px-4 py-2 bg-green-600 text-white text-sm rounded-lg hover:bg-green-700 transition-colors">
+                            <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            {% if current_status.firebase_enabled %}
+                            Update Domain (DB + Firebase)
+                            {% else %}
+                            Update Domain (DB Only)
+                            {% endif %}
+                        </button>
+                        <a href="{% url 'projects:project_detail' project.id %}" class="flex-1 inline-flex items-center justify-center px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 text-sm rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                            <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                            Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="space-y-6">
+            <!-- Project Info -->
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4">
+                <h3 class="text-base font-semibold text-gray-900 dark:text-gray-100 mb-3">Project Details</h3>
+                <div class="space-y-3 text-sm">
+                    <div class="flex justify-between">
+                        <span class="text-gray-600 dark:text-gray-400">App Name:</span>
+                        <span class="font-medium">{{ project.app_name }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-600 dark:text-gray-400">Project ID:</span>
+                        <span class="font-mono text-xs">{{ project.project_id }}</span>
+                    </div>
+                    {% if current_status.firebase_project_id %}
+                    <div class="flex justify-between">
+                        <span class="text-gray-600 dark:text-gray-400">Firebase ID:</span>
+                        <span class="font-mono text-xs">{{ current_status.firebase_project_id }}</span>
+                    </div>
+                    {% endif %}
+                    <div class="flex justify-between">
+                        <span class="text-gray-600 dark:text-gray-400">Status:</span>
+                        <span class="px-2 py-1 rounded-full text-xs font-medium
+                            {% if project.status == 'active' %}bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200
+                            {% elif project.status == 'inactive' %}bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200
+                            {% else %}bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200{% endif %}">
+                            {{ project.get_status_display }}
+                        </span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-600 dark:text-gray-400">Owner:</span>
+                        <span class="font-medium">{{ project.user.username }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Current URL Status -->
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4">
+                <h3 class="text-base font-semibold text-gray-900 dark:text-gray-100 mb-3">Current URL Status</h3>
+                <div class="space-y-3 text-sm">
+                    <div>
+                        <span class="text-gray-600 dark:text-gray-400">Effective URL:</span>
+                        <div class="mt-1 p-2 bg-gray-50 dark:bg-gray-700 rounded font-mono text-xs break-all">
+                            {{ current_status.effective_url }}
+                        </div>
+                        <p class="text-xs text-gray-500 mt-1">
+                            {% if current_status.firebase_url %}
+                            🔥 Source: Firebase Remote Config
+                            {% else %}
+                            💾 Source: Local Database
+                            {% endif %}
+                        </p>
+                    </div>
+                    
+                    {% if current_status.last_sync %}
+                    <div>
+                        <span class="text-gray-600 dark:text-gray-400">Last Firebase Sync:</span>
+                        <div class="text-xs text-gray-500">{{ current_status.last_sync|timesince }} ago</div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="bg-gray-50 dark:bg-gray-900 rounded-lg p-4">
+                <h4 class="font-medium mb-3 text-gray-900 dark:text-gray-100 text-sm">Quick Actions</h4>
+                <div class="space-y-2">
+                    <a href="{% url 'projects:project_detail' project.id %}" class="block w-full text-left px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors">
+                        View Project Details
+                    </a>
+                    <a href="{% url 'projects:project_list' %}" class="block w-full text-left px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors">
+                        Back to Projects List
+                    </a>
+                    {% if current_status.firebase_enabled %}
+                    <button onclick="syncFromFirebase()" class="block w-full text-left px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors">
+                        Sync from Firebase
+                    </button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if current_status.firebase_enabled %}
+<script>
+function syncFromFirebase() {
+    fetch('{% url "projects:sync_firebase_url" project.id %}', {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': '{{ csrf_token }}',
+            'Content-Type': 'application/json',
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('✅ Synced from Firebase!\nCurrent URL: ' + (data.current_url || 'None'));
+            location.reload();
+        } else {
+            alert('❌ Sync failed: ' + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error syncing from Firebase');
+    });
+}
+</script>
+{% endif %}
+{% endblock content %}

@@ -1,0 +1,69 @@
+{% extends 'base/base.html' %}
+{% block title %}Profile - {{ user.username }}{% endblock title %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-8">
+        <div class="flex flex-col lg:flex-row gap-8">
+            <!-- Profile Picture Section -->
+            <div class="flex-shrink-0 text-center">
+                <div class="w-32 h-32 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 text-white flex items-center justify-center text-4xl font-bold mx-auto">
+                    {% if user.profile_picture %}
+                        <img src="{{ user.profile_picture.url }}" alt="{{ user.username }}'s profile" class="w-32 h-32 rounded-full" />
+                    {% else %}
+                        {{ user.username.0|upper }}
+                    {% endif %}
+                </div>
+                <div class="mt-4">
+                    <a href="{% url 'accounts:profile_edit' %}" class="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors">Edit Profile</a>
+                </div>
+            </div>
+            
+            <!-- Profile Information -->
+            <div class="flex-grow">
+                <h1 class="text-3xl font-bold mb-6">{{ user.username }}</h1>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    {% if user.full_name %}
+                    <div>
+                        <h3 class="font-medium text-gray-600 dark:text-gray-400 mb-1">Full Name</h3>
+                        <p>{{ user.full_name }}</p>
+                    </div>
+                    {% endif %}
+                    
+                    <div>
+                        <h3 class="font-medium text-gray-600 dark:text-gray-400 mb-1">Email</h3>
+                        <p>{{ user.email }}</p>
+                    </div>
+                    
+                    {% if user.location %}
+                    <div>
+                        <h3 class="font-medium text-gray-600 dark:text-gray-400 mb-1">Location</h3>
+                        <p>{{ user.location }}</p>
+                    </div>
+                    {% endif %}
+                    
+                    {% if user.website %}
+                    <div>
+                        <h3 class="font-medium text-gray-600 dark:text-gray-400 mb-1">Website</h3>
+                        <p><a href="{{ user.website }}" class="text-blue-600 hover:text-blue-700" target="_blank">{{ user.website }}</a></p>
+                    </div>
+                    {% endif %}
+                    
+                    <div>
+                        <h3 class="font-medium text-gray-600 dark:text-gray-400 mb-1">Member Since</h3>
+                        <p>{{ user.date_joined|date:"F Y" }}</p>
+                    </div>
+                </div>
+                
+                {% if user.bio %}
+                <div>
+                    <h3 class="font-medium text-gray-600 dark:text-gray-400 mb-2">Bio</h3>
+                    <p class="text-gray-700 dark:text-gray-300">{{ user.bio }}</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

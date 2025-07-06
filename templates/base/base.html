@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" x-data="themeSwitcher()" x-init="init()" :data-theme="theme">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Django + Tailwind{% endblock title %}</title>
+    <meta name="description" content="{% block description %}Modern Django boilerplate{% endblock description %}">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚀</text></svg>">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/dist/output.css' %}">
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 font-sans text-gray-900 dark:text-gray-100 min-h-screen flex flex-col">
+    {% include 'base/_navbar.html' %}
+
+    <main class="container mx-auto px-4 py-8 flex-grow">
+        {% if messages %}
+            <div class="max-w-4xl mx-auto space-y-2 mb-6">
+            {% for message in messages %}
+                <div role="alert" class="alert {{ message.tags }} shadow-sm animate-fade-in">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-5 w-5" fill="none" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <span>{{ message }}</span>
+                </div>
+            {% endfor %}
+            </div>
+        {% endif %}
+        
+        {% block content %}{% endblock content %}
+    </main>
+
+    {% include 'base/_footer.html' %}
+    
+    <script>
+        function themeSwitcher() {
+            return {
+                theme: 'light',
+                isDark: false,
+                init() {
+                    const storedTheme = localStorage.getItem('theme');
+                    const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                    const initialTheme = storedTheme || (systemPrefersDark ? 'dark' : 'light');
+                    this.setTheme(initialTheme);
+
+                    this.$watch('isDark', (isDark) => {
+                        this.setTheme(isDark ? 'dark' : 'light');
+                    });
+                },
+                setTheme(newTheme) {
+                    this.theme = newTheme;
+                    this.isDark = (newTheme === 'dark');
+                    localStorage.setItem('theme', newTheme);
+                    document.documentElement.classList.toggle('dark', this.isDark);
+                }
+            }
+        }
+    </script>
+    
+    {% block extra_js %}{% endblock extra_js %}
+</body>
+</html>
