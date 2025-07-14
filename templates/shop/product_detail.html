@@ -1,0 +1,179 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}{{ product.brand }} {{ product.name }} - Alamana-jo{% endblock title %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 py-8">
+    <!-- Breadcrumb -->
+    <nav class="flex mb-8" aria-label="Breadcrumb">
+        <ol class="inline-flex items-center space-x-1 md:space-x-3">
+            <li>
+                <a href="{% url 'shop:home' %}" class="text-gray-500 hover:text-emerald-600 transition-colors">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path>
+                    </svg>
+                </a>
+            </li>
+            <li><svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg></li>
+            <li><a href="{% url 'shop:product_list' %}" class="text-gray-500 hover:text-emerald-600 transition-colors">Products</a></li>
+            <li><svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg></li>
+            <li><span class="text-gray-900 dark:text-white font-medium">{{ product.name }}</span></li>
+        </ol>
+    </nav>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+        <!-- Product Images -->
+        <div>
+            {% if product.images.exists %}
+                {% for image in product.images.all %}
+                    <img src="{{ image.image.url }}" alt="{{ image.alt_text }}" class="w-full h-96 object-cover rounded-xl mb-4">
+                {% endfor %}
+            {% else %}
+                <div class="w-full h-96 bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-800 rounded-xl flex items-center justify-center">
+                    <span class="text-6xl text-gray-400">🔧</span>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Product Info -->
+        <div>
+            <div class="mb-4">
+                <span class="text-sm font-medium text-emerald-600 bg-emerald-50 dark:bg-emerald-900/20 px-3 py-1 rounded-full">
+                    {{ product.get_product_type_display }}
+                </span>
+            </div>
+            
+            <h1 class="text-3xl font-bold mb-4">{{ product.brand }} {{ product.name }}</h1>
+            
+            <p class="text-gray-600 dark:text-gray-400 mb-6">{{ product.description }}</p>
+            
+            <!-- Price -->
+            <div class="mb-6">
+                {% if product.is_on_sale %}
+                    <div class="flex items-center gap-3">
+                        <span class="text-3xl font-bold text-red-600">€{{ product.price }}</span>
+                        <span class="text-lg text-gray-500 line-through">€{{ product.compare_price }}</span>
+                        <span class="bg-red-100 text-red-800 px-2 py-1 rounded-full text-sm font-bold">
+                            {{ product.sale_percentage }}% OFF
+                        </span>
+                    </div>
+                {% else %}
+                    <span class="text-3xl font-bold">€{{ product.price }}</span>
+                {% endif %}
+            </div>
+            
+            <!-- Stock Status -->
+            <div class="mb-6">
+                {% if product.is_in_stock %}
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
+                        ✓ In Stock ({{ product.stock_quantity }} available)
+                    </span>
+                {% else %}
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">
+                        ✗ Out of Stock
+                    </span>
+                {% endif %}
+            </div>
+            
+            <!-- Add to Cart -->
+            {% if product.is_in_stock %}
+                <div class="flex gap-4 mb-6">
+                    <button onclick="addToCart({{ product.id }})" 
+                            class="btn btn-primary flex-1">
+                        Add to Cart
+                    </button>
+                    {% if user.is_authenticated %}
+                    <button onclick="addToWishlist({{ product.id }})" 
+                            class="btn btn-outline">
+                        ♡ Wishlist
+                    </button>
+                    {% endif %}
+                </div>
+            {% endif %}
+            
+            <!-- Product Details -->
+            <div class="border-t pt-6">
+                <h3 class="font-semibold mb-4">Product Details</h3>
+                <div class="space-y-2 text-sm">
+                    <div class="flex justify-between">
+                        <span class="text-gray-600 dark:text-gray-400">SKU:</span>
+                        <span>{{ product.sku }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-600 dark:text-gray-400">Brand:</span>
+                        <span>{{ product.brand }}</span>
+                    </div>
+                    {% if product.model_number %}
+                    <div class="flex justify-between">
+                        <span class="text-gray-600 dark:text-gray-400">Model:</span>
+                        <span>{{ product.model_number }}</span>
+                    </div>
+                    {% endif %}
+                    <div class="flex justify-between">
+                        <span class="text-gray-600 dark:text-gray-400">Vehicle Type:</span>
+                        <span>{{ product.get_vehicle_compatibility_display }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+async function addToCart(productId) {
+    try {
+        const response = await fetch('{% url "shop:add_to_cart" %}', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}',
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: JSON.stringify({
+                product_id: productId,
+                quantity: 1
+            })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            alert(data.message);
+        } else {
+            alert(data.error);
+        }
+    } catch (error) {
+        alert('Error adding to cart');
+    }
+}
+
+{% if user.is_authenticated %}
+async function addToWishlist(productId) {
+    try {
+        const response = await fetch('{% url "shop:add_to_wishlist" %}', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}',
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: JSON.stringify({
+                product_id: productId
+            })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            alert(data.message);
+        } else {
+            alert(data.error);
+        }
+    } catch (error) {
+        alert('Error updating wishlist');
+    }
+}
+{% endif %}
+</script>
+{% endblock content %}

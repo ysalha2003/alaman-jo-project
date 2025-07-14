@@ -1,0 +1,262 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}My Wishlist - Alamana-jo{% endblock title %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto px-4 py-8">
+    <!-- Breadcrumb -->
+    <div class="breadcrumbs text-sm mb-8">
+        <ul>
+            <li><a href="{% url 'shop:home' %}">Home</a></li>
+            <li><a href="{% url 'accounts:profile' %}">Profile</a></li>
+            <li>Wishlist</li>
+        </ul>
+    </div>
+
+    <div class="flex items-center justify-between mb-8">
+        <h1 class="text-3xl font-bold">My Wishlist</h1>
+        <span class="text-gray-600 dark:text-gray-400">{{ wishlist_items.count }} item{{ wishlist_items.count|pluralize }}</span>
+    </div>
+
+    {% if wishlist_items.exists %}
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        {% for item in wishlist_items %}
+        <div class="card bg-base-100 shadow-lg hover:shadow-xl transition-all duration-300 group" id="wishlist-item-{{ item.id }}">
+            <figure class="relative overflow-hidden">
+                {% if item.product.images.first %}
+                <img src="{{ item.product.images.first.image.url }}" 
+                     alt="{{ item.product.name }}" 
+                     class="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-500">
+                {% else %}
+                <div class="w-full h-64 bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center">
+                    <span class="text-6xl text-gray-400">🔧</span>
+                </div>
+                {% endif %}
+                
+                <!-- Badges -->
+                <div class="absolute top-4 left-4 flex flex-col gap-2">
+                    {% if item.product.is_on_sale %}
+                    <div class="badge badge-error text-white font-bold">
+                        {{ item.product.sale_percentage }}% OFF
+                    </div>
+                    {% endif %}
+                    {% if item.product.is_new_arrival %}
+                    <div class="badge badge-success text-white font-bold">NEW</div>
+                    {% endif %}
+                    {% if item.product.is_bestseller %}
+                    <div class="badge badge-warning text-white font-bold">BESTSELLER</div>
+                    {% endif %}
+                </div>
+                
+                <!-- Remove from wishlist -->
+                <div class="absolute top-4 right-4">
+                    <button onclick="removeFromWishlist({{ item.product.id }}, {{ item.id }})" 
+                            class="btn btn-circle btn-sm bg-white/80 hover:bg-white border-0 text-red-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+                
+                <!-- Stock status -->
+                {% if not item.product.is_in_stock %}
+                <div class="absolute inset-0 bg-black/50 flex items-center justify-center">
+                    <span class="badge badge-error text-white font-bold">OUT OF STOCK</span>
+                </div>
+                {% elif item.product.is_low_stock %}
+                <div class="absolute bottom-4 left-4">
+                    <div class="badge badge-warning text-white font-bold">
+                        ONLY {{ item.product.stock_quantity }} LEFT
+                    </div>
+                </div>
+                {% endif %}
+            </figure>
+            
+            <div class="card-body p-4">
+                <!-- Category and Type -->
+                <div class="flex items-center justify-between mb-2">
+                    <span class="badge badge-outline badge-sm">{{ item.product.get_product_type_display }}</span>
+                    <span class="text-xs text-blue-600 dark:text-blue-400 font-medium">
+                        {{ item.product.get_vehicle_compatibility_display }}
+                    </span>
+                </div>
+                
+                <!-- Product Name -->
+                <h3 class="card-title text-base mb-2 line-clamp-2">
+                    <a href="{{ item.product.get_absolute_url }}" class="hover:text-blue-600 transition-colors">
+                        {{ item.product.brand }} {{ item.product.name }}
+                    </a>
+                </h3>
+                
+                <!-- Description -->
+                <p class="text-sm text-gray-600 dark:text-gray-400 mb-3 line-clamp-2">
+                    {{ item.product.short_description }}
+                </p>
+                
+                <!-- Price and Actions -->
+                <div class="card-actions justify-between items-end">
+                    <div class="flex flex-col">
+                        {% if item.product.is_on_sale %}
+                        <span class="text-lg font-bold text-red-600">€{{ item.product.price }}</span>
+                        <span class="text-sm text-gray-500 line-through">€{{ item.product.compare_price }}</span>
+                        {% else %}
+                        <span class="text-lg font-bold">€{{ item.product.price }}</span>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="flex gap-2">
+                        {% if item.product.is_in_stock %}
+                        <button onclick="addToCart({{ item.product.id }})" 
+                                class="btn btn-primary btn-sm rounded-full">
+                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m1.6 8L6 6H3m4 7l-1.5 6M17 21a2 2 0 100-4 2 2 0 000 4z" />
+                            </svg>
+                            Add to Cart
+                        </button>
+                        {% else %}
+                        <span class="text-sm text-gray-500">Out of Stock</span>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <!-- Added date -->
+                <div class="text-xs text-gray-500 mt-2">
+                    Added {{ item.created_at|timesince }} ago
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    
+    <!-- Continue Shopping -->
+    <div class="text-center mt-12">
+        <a href="{% url 'shop:product_list' %}" 
+           class="btn btn-outline btn-lg rounded-full px-8">
+            Continue Shopping
+        </a>
+    </div>
+    
+    {% else %}
+    <!-- Empty Wishlist -->
+    <div class="text-center py-16">
+        <div class="w-24 h-24 mx-auto mb-6 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center">
+            <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+            </svg>
+        </div>
+        <h2 class="text-2xl font-bold mb-4">Your wishlist is empty</h2>
+        <p class="text-gray-600 dark:text-gray-400 mb-8">
+            Save items you love for later by clicking the heart icon on any product
+        </p>
+        <a href="{% url 'shop:product_list' %}" 
+           class="btn btn-primary">
+            Start Shopping
+        </a>
+    </div>
+    {% endif %}
+</div>
+
+<script>
+// Remove from wishlist
+function removeFromWishlist(productId, itemId) {
+    if (!confirm('Remove this item from your wishlist?')) {
+        return;
+    }
+    
+    fetch('{% url "shop:add_to_wishlist" %}', {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': '{{ csrf_token }}',
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        body: JSON.stringify({
+            product_id: productId
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Remove item from DOM
+            document.getElementById(`wishlist-item-${itemId}`).remove();
+            showNotification(data.message, 'success');
+            
+            // Update counter
+            const counter = document.querySelector('.text-gray-600');
+            if (counter) {
+                const currentCount = parseInt(counter.textContent.split(' ')[0]) - 1;
+                counter.textContent = `${currentCount} item${currentCount !== 1 ? 's' : ''}`;
+            }
+            
+            // If no items left, reload page to show empty state
+            if (document.querySelectorAll('[id^="wishlist-item-"]').length === 0) {
+                location.reload();
+            }
+        } else {
+            showNotification(data.error, 'error');
+        }
+    })
+    .catch(error => {
+        showNotification('Error removing item', 'error');
+    });
+}
+
+// Add to cart functionality
+function addToCart(productId) {
+    fetch('{% url "shop:add_to_cart" %}', {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': '{{ csrf_token }}',
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        body: JSON.stringify({
+            product_id: productId,
+            quantity: 1
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showNotification(data.message, 'success');
+            updateCartCounter(data.cart_total_items);
+        } else {
+            showNotification(data.error, 'error');
+        }
+    })
+    .catch(error => {
+        showNotification('Error adding to cart', 'error');
+    });
+}
+
+// Utility functions
+function showNotification(message, type) {
+    const toast = document.createElement('div');
+    toast.className = `alert ${type === 'success' ? 'alert-success' : 'alert-error'} fixed top-4 right-4 z-50 w-auto max-w-sm`;
+    toast.innerHTML = `
+        <span>${message}</span>
+        <button onclick="this.parentElement.remove()" class="btn btn-sm btn-circle">✕</button>
+    `;
+    document.body.appendChild(toast);
+    
+    setTimeout(() => {
+        if (toast.parentElement) {
+            toast.remove();
+        }
+    }, 5000);
+}
+
+function updateCartCounter(count) {
+    const counter = document.querySelector('.cart-counter');
+    if (counter) {
+        counter.textContent = count;
+        if (count > 0) {
+            counter.style.display = 'block';
+        } else {
+            counter.style.display = 'none';
+        }
+    }
+}
+</script>
+{% endblock content %}

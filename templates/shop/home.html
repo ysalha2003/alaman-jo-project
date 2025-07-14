@@ -1,0 +1,556 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Alamana-jo - Premium Spare Parts for Bikes, E-Bikes & E-Scooters{% endblock title %}
+
+{% block content %}
+<!-- Hero Section - Modern Glassmorphism Design -->
+<div class="relative min-h-[90vh] flex items-center justify-center overflow-hidden bg-gradient-to-br from-emerald-400 via-cyan-500 to-blue-600">
+    <!-- Animated Background Elements -->
+    <div class="absolute inset-0">
+        <div class="absolute top-1/4 left-1/4 w-72 h-72 bg-white/10 rounded-full blur-3xl animate-pulse"></div>
+        <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-emerald-400/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
+        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-cyan-400/15 rounded-full blur-2xl animate-pulse delay-500"></div>
+    </div>
+    
+    <!-- Hero Content -->
+    <div class="relative z-10 text-center text-white px-4 max-w-6xl mx-auto">
+        <div class="backdrop-blur-md bg-white/10 rounded-3xl p-12 border border-white/20 shadow-2xl hover:bg-white/15 transition-all duration-500">
+            <!-- Logo/Brand -->
+            <div class="flex items-center justify-center mb-6">
+                <div class="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mr-4 backdrop-blur-sm">
+                    <span class="text-3xl">🔧</span>
+                </div>
+                <h1 class="text-5xl md:text-7xl font-bold bg-gradient-to-r from-white via-emerald-100 to-cyan-100 bg-clip-text text-transparent">
+                    Alamana-jo
+                </h1>
+            </div>
+            
+            <!-- Tagline -->
+            <p class="text-xl md:text-2xl mb-8 text-emerald-100 max-w-3xl mx-auto leading-relaxed font-light">
+                Premium spare parts and expert maintenance for your bikes, e-bikes, and e-scooters in Antwerpen
+            </p>
+            
+            <!-- CTA Buttons -->
+            <div class="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8">
+                <a href="{% url 'shop:product_list' %}?vehicle=e_bike" 
+                   class="group relative px-8 py-4 bg-white text-emerald-600 hover:text-white rounded-2xl font-semibold overflow-hidden transition-all duration-300 hover:scale-105 shadow-xl hover:shadow-2xl">
+                    <div class="absolute inset-0 bg-gradient-to-r from-emerald-500 to-cyan-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
+                    <span class="relative z-10 flex items-center">
+                        <span class="mr-2">⚡</span>
+                        E-Bike Parts
+                        <svg class="w-5 h-5 ml-2 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                        </svg>
+                    </span>
+                </a>
+                
+                <a href="{% url 'shop:product_list' %}" 
+                   class="group px-8 py-4 border-2 border-white text-white hover:bg-white hover:text-emerald-600 rounded-2xl font-semibold transition-all duration-300 hover:scale-105 backdrop-blur-sm">
+                    <span class="flex items-center">
+                        View All Parts
+                        <svg class="w-5 h-5 ml-2 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                        </svg>
+                    </span>
+                </a>
+            </div>
+            
+            <!-- Trust Indicators -->
+            <div class="flex flex-wrap justify-center items-center gap-6 text-sm text-emerald-100">
+                <div class="flex items-center">
+                    <span class="w-2 h-2 bg-emerald-400 rounded-full mr-2 animate-pulse"></span>
+                    Certified Technicians
+                </div>
+                <div class="flex items-center">
+                    <span class="w-2 h-2 bg-cyan-400 rounded-full mr-2 animate-pulse delay-300"></span>
+                    Quality Guarantee
+                </div>
+                <div class="flex items-center">
+                    <span class="w-2 h-2 bg-blue-400 rounded-full mr-2 animate-pulse delay-700"></span>
+                    Fast Delivery
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Scroll Indicator -->
+    <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+        <div class="w-8 h-12 border-2 border-white/30 rounded-full flex justify-center">
+            <div class="w-1 h-3 bg-white/70 rounded-full mt-2 animate-pulse"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Categories Section - Improved Grid -->
+<section class="py-20 bg-gray-50 dark:bg-gray-900 relative">
+    <div class="max-w-7xl mx-auto px-4">
+        <!-- Section Header -->
+        <div class="text-center mb-16">
+            <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-emerald-500 to-cyan-500 rounded-2xl mb-6">
+                <span class="text-2xl">🛠️</span>
+            </div>
+            <h2 class="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-300 bg-clip-text text-transparent">
+                Premium Categories
+            </h2>
+            <p class="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto leading-relaxed">
+                Discover quality spare parts for every component of your ride
+            </p>
+        </div>
+        
+        <!-- Categories Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {% for category in categories %}
+            <a href="{% url 'shop:category_detail' category.slug %}" 
+               class="group relative bg-white dark:bg-gray-800 rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 hover:scale-[1.02]">
+                
+                <!-- Category Image -->
+                <div class="relative h-64 overflow-hidden">
+                    {% if category.image %}
+                    <img src="{{ category.image.url }}" 
+                         alt="{{ category.name }}" 
+                         class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                    {% else %}
+                    <div class="w-full h-full bg-gradient-to-br from-emerald-400 via-cyan-500 to-blue-500 flex items-center justify-center">
+                        <span class="text-6xl text-white">🔧</span>
+                    </div>
+                    {% endif %}
+                    
+                    <!-- Overlay -->
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    
+                    <!-- Product Count Badge -->
+                    <div class="absolute top-4 right-4 bg-white/90 backdrop-blur-sm text-gray-800 px-3 py-1 rounded-full text-sm font-medium">
+                        {{ category.product_count }} items
+                    </div>
+                </div>
+                
+                <!-- Category Info -->
+                <div class="p-6">
+                    <h3 class="text-xl font-bold mb-2 group-hover:text-emerald-600 transition-colors duration-300">
+                        {{ category.name }}
+                    </h3>
+                    <p class="text-gray-600 dark:text-gray-400 line-clamp-2">
+                        {{ category.description|truncatewords:15 }}
+                    </p>
+                    
+                    <!-- Action Button -->
+                    <div class="mt-4 flex items-center text-emerald-600 font-medium group-hover:text-emerald-700 transition-colors">
+                        <span>Explore Parts</span>
+                        <svg class="w-4 h-4 ml-2 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                        </svg>
+                    </div>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Featured Products Section -->
+{% if featured_products %}
+<section class="py-20 bg-white dark:bg-gray-800 relative">
+    <div class="max-w-7xl mx-auto px-4">
+        <!-- Section Header -->
+        <div class="text-center mb-16">
+            <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-500 rounded-2xl mb-6">
+                <span class="text-2xl">⭐</span>
+            </div>
+            <h2 class="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-300 bg-clip-text text-transparent">
+                Featured Products
+            </h2>
+            <p class="text-xl text-gray-600 dark:text-gray-400">
+                Hand-picked premium parts from trusted brands
+            </p>
+        </div>
+        
+        <!-- Products Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            {% for product in featured_products %}
+            <div class="group bg-white dark:bg-gray-800 rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 overflow-hidden border border-gray-100 dark:border-gray-700">
+                
+                <!-- Product Image -->
+                <div class="relative overflow-hidden">
+                    {% if product.primary_image %}
+                    <img src="{{ product.primary_image.image.url }}" 
+                         alt="{{ product.name }}" 
+                         class="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-700">
+                    {% else %}
+                    <div class="w-full h-64 bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-800 flex items-center justify-center">
+                        <span class="text-6xl text-gray-400">🔧</span>
+                    </div>
+                    {% endif %}
+                    
+                    <!-- Badges -->
+                    <div class="absolute top-4 left-4 flex flex-col gap-2">
+                        {% if product.is_on_sale %}
+                        <span class="bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold">
+                            {{ product.sale_percentage }}% OFF
+                        </span>
+                        {% endif %}
+                        {% if product.is_new_arrival %}
+                        <span class="bg-emerald-500 text-white px-3 py-1 rounded-full text-sm font-bold">NEW</span>
+                        {% endif %}
+                        {% if product.is_bestseller %}
+                        <span class="bg-orange-500 text-white px-3 py-1 rounded-full text-sm font-bold">BESTSELLER</span>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Quick Actions -->
+                    <div class="absolute top-4 right-4 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        {% if user.is_authenticated %}
+                        <button onclick="addToWishlist({{ product.id }})" 
+                                class="w-10 h-10 bg-white/90 hover:bg-white rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-all duration-200">
+                            <svg class="w-5 h-5 text-gray-600 hover:text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                            </svg>
+                        </button>
+                        {% endif %}
+                        <a href="{{ product.get_absolute_url }}" 
+                           class="w-10 h-10 bg-white/90 hover:bg-white rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-all duration-200">
+                            <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                            </svg>
+                        </a>
+                    </div>
+                    
+                    <!-- Stock Status -->
+                    {% if not product.is_in_stock %}
+                    <div class="absolute inset-0 bg-black/50 flex items-center justify-center">
+                        <span class="bg-red-500 text-white px-4 py-2 rounded-full font-bold">OUT OF STOCK</span>
+                    </div>
+                    {% elif product.is_low_stock %}
+                    <div class="absolute bottom-4 left-4">
+                        <span class="bg-orange-500 text-white px-3 py-1 rounded-full text-sm font-bold">
+                            ONLY {{ product.stock_quantity }} LEFT
+                        </span>
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <!-- Product Info -->
+                <div class="p-6">
+                    <!-- Category & Type -->
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="text-xs font-medium text-emerald-600 bg-emerald-50 dark:bg-emerald-900/20 px-2 py-1 rounded-full">
+                            {{ product.get_product_type_display }}
+                        </span>
+                        <span class="text-xs text-blue-600 dark:text-blue-400 font-medium">
+                            {{ product.get_vehicle_compatibility_display }}
+                        </span>
+                    </div>
+                    
+                    <!-- Product Name -->
+                    <h3 class="font-bold text-lg mb-2 line-clamp-2 group-hover:text-emerald-600 transition-colors">
+                        <a href="{{ product.get_absolute_url }}">
+                            {{ product.brand }} {{ product.name }}
+                        </a>
+                    </h3>
+                    
+                    <!-- Description -->
+                    <p class="text-gray-600 dark:text-gray-400 text-sm mb-4 line-clamp-2">
+                        {{ product.short_description }}
+                    </p>
+                    
+                    <!-- Rating -->
+                    {% if product.review_count %}
+                    <div class="flex items-center mb-4">
+                        <div class="flex text-yellow-400">
+                            {% for i in "12345" %}
+                                {% if product.average_rating >= i|add:0 %}
+                                <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/></svg>
+                                {% else %}
+                                <svg class="w-4 h-4 text-gray-300 fill-current" viewBox="0 0 20 20"><path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/></svg>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                        <span class="text-sm text-gray-500 ml-2">({{ product.review_count }})</span>
+                    </div>
+                    {% endif %}
+                    
+                    <!-- Price & Action -->
+                    <div class="flex items-center justify-between">
+                        <div class="flex flex-col">
+                            {% if product.is_on_sale %}
+                            <span class="text-lg font-bold text-red-600">€{{ product.price }}</span>
+                            <span class="text-sm text-gray-500 line-through">€{{ product.compare_price }}</span>
+                            {% else %}
+                            <span class="text-lg font-bold text-gray-900 dark:text-white">€{{ product.price }}</span>
+                            {% endif %}
+                        </div>
+                        
+                        {% if product.is_in_stock %}
+                        <button onclick="addToCart({{ product.id }})" 
+                                class="bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-600 hover:to-cyan-600 text-white px-4 py-2 rounded-xl font-medium transition-all duration-300 hover:scale-105 shadow-lg">
+                            Add to Cart
+                        </button>
+                        {% else %}
+                        <span class="text-sm text-gray-500 font-medium">Out of Stock</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <!-- View All Button -->
+        <div class="text-center mt-12">
+            <a href="{% url 'shop:product_list' %}" 
+               class="inline-flex items-center px-8 py-4 bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-600 hover:to-cyan-600 text-white rounded-2xl font-semibold transition-all duration-300 hover:scale-105 shadow-xl">
+                <span>View All Products</span>
+                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                </svg>
+            </a>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Services Section - Modern Cards -->
+<section class="py-20 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
+    <div class="max-w-7xl mx-auto px-4">
+        <!-- Section Header -->
+        <div class="text-center mb-16">
+            <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl mb-6">
+                <span class="text-2xl">⚙️</span>
+            </div>
+            <h2 class="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-300 bg-clip-text text-transparent">
+                Expert Services
+            </h2>
+            <p class="text-xl text-gray-600 dark:text-gray-400">
+                Professional maintenance and repair services
+            </p>
+        </div>
+        
+        <!-- Services Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Service 1 -->
+            <div class="group bg-white dark:bg-gray-800 rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 border border-gray-100 dark:border-gray-700">
+                <div class="w-16 h-16 bg-gradient-to-br from-emerald-500 to-cyan-500 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4" />
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold mb-4 group-hover:text-emerald-600 transition-colors">Expert Repairs</h3>
+                <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
+                    Professional repair services by certified technicians with years of experience in all vehicle types.
+                </p>
+            </div>
+            
+            <!-- Service 2 -->
+            <div class="group bg-white dark:bg-gray-800 rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 border border-gray-100 dark:border-gray-700">
+                <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-500 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold mb-4 group-hover:text-blue-600 transition-colors">Quality Parts</h3>
+                <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
+                    Genuine and compatible spare parts from trusted manufacturers with comprehensive warranty coverage.
+                </p>
+            </div>
+            
+            <!-- Service 3 -->
+            <div class="group bg-white dark:bg-gray-800 rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 border border-gray-100 dark:border-gray-700">
+                <div class="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold mb-4 group-hover:text-purple-600 transition-colors">Fast Service</h3>
+                <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
+                    Quick turnaround times and convenient scheduling to get you back on the road as soon as possible.
+                </p>
+            </div>
+        </div>
+        
+        <!-- CTA Button -->
+        <div class="text-center mt-12">
+            {% if user.is_authenticated %}
+            <a href="{% url 'shop:maintenance_quote' %}" 
+               class="inline-flex items-center px-8 py-4 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded-2xl font-semibold transition-all duration-300 hover:scale-105 shadow-xl">
+                <span>Request Maintenance Quote</span>
+                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                </svg>
+            </a>
+            {% else %}
+            <a href="{% url 'accounts:register' %}" 
+               class="inline-flex items-center px-8 py-4 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded-2xl font-semibold transition-all duration-300 hover:scale-105 shadow-xl">
+                <span>Sign Up for Services</span>
+                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                </svg>
+            </a>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<!-- Contact Info Section -->
+<section class="py-16 bg-gradient-to-r from-emerald-600 via-cyan-500 to-blue-600 relative overflow-hidden">
+    <!-- Background Pattern -->
+    <div class="absolute inset-0 opacity-10">
+        <div class="absolute top-0 left-0 w-full h-full" style="background-image: radial-gradient(circle at 25% 25%, white 2px, transparent 2px); background-size: 50px 50px;"></div>
+    </div>
+    
+    <div class="relative z-10 max-w-4xl mx-auto px-4 text-center text-white">
+        <div class="backdrop-blur-sm bg-white/10 rounded-3xl p-8 border border-white/20">
+            <h2 class="text-3xl md:text-4xl font-bold mb-8">Visit Our Store</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Address -->
+                <div class="text-center">
+                    <div class="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                        <span class="text-2xl">📍</span>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-4">Address</h3>
+                    <p class="text-emerald-100 leading-relaxed">
+                        Quellinstraat 45<br>
+                        2018 Antwerpen, Belgium
+                    </p>
+                </div>
+                
+                <!-- Contact -->
+                <div class="text-center">
+                    <div class="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                        <span class="text-2xl">📞</span>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-4">Contact</h3>
+                    <p class="text-emerald-100 leading-relaxed">
+                        <a href="tel:+32499890237" class="hover:text-white transition-colors">+32 499 89 02 37</a><br>
+                        <a href="mailto:alamanajo@gmail.com" class="hover:text-white transition-colors">alamanajo@gmail.com</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- JavaScript for Interactions -->
+<script>
+// Modern cart handling with better UX
+async function addToCart(productId) {
+    try {
+        const response = await fetch('{% url "shop:add_to_cart" %}', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}',
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: JSON.stringify({
+                product_id: productId,
+                quantity: 1
+            })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            showToast(data.message, 'success');
+            updateCartCounter(data.cart_total_items);
+            // Add visual feedback
+            animateCartAdd();
+        } else {
+            showToast(data.error, 'error');
+        }
+    } catch (error) {
+        showToast('Error adding to cart', 'error');
+    }
+}
+
+// Modern wishlist handling
+{% if user.is_authenticated %}
+async function addToWishlist(productId) {
+    try {
+        const response = await fetch('{% url "shop:add_to_wishlist" %}', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}',
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: JSON.stringify({
+                product_id: productId
+            })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            showToast(data.message, 'success');
+        } else {
+            showToast(data.error, 'error');
+        }
+    } catch (error) {
+        showToast('Error updating wishlist', 'error');
+    }
+}
+{% endif %}
+
+// Modern toast notifications
+function showToast(message, type) {
+    const toast = document.createElement('div');
+    toast.className = `fixed top-4 right-4 z-50 px-6 py-4 rounded-xl shadow-lg transform translate-x-full transition-all duration-300 ${
+        type === 'success' 
+            ? 'bg-emerald-500 text-white' 
+            : 'bg-red-500 text-white'
+    }`;
+    toast.innerHTML = `
+        <div class="flex items-center">
+            <span class="mr-2">${type === 'success' ? '✅' : '❌'}</span>
+            <span>${message}</span>
+            <button onclick="this.parentElement.parentElement.remove()" class="ml-4 text-white/80 hover:text-white">×</button>
+        </div>
+    `;
+    
+    document.body.appendChild(toast);
+    
+    // Animate in
+    setTimeout(() => {
+        toast.classList.remove('translate-x-full');
+    }, 100);
+    
+    // Auto remove
+    setTimeout(() => {
+        toast.classList.add('translate-x-full');
+        setTimeout(() => toast.remove(), 300);
+    }, 5000);
+}
+
+// Cart counter update
+function updateCartCounter(count) {
+    const counter = document.querySelector('.cart-counter');
+    if (counter) {
+        counter.textContent = count;
+        counter.style.display = count > 0 ? 'block' : 'none';
+    }
+}
+
+// Cart add animation
+function animateCartAdd() {
+    const cartIcon = document.querySelector('.cart-counter').parentElement;
+    cartIcon.classList.add('animate-bounce');
+    setTimeout(() => {
+        cartIcon.classList.remove('animate-bounce');
+    }, 600);
+}
+
+// Smooth scroll for anchor links
+document.addEventListener('DOMContentLoaded', function() {
+    const scrollElements = document.querySelectorAll('a[href^="#"]');
+    scrollElements.forEach(element => {
+        element.addEventListener('click', function(e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+    });
+});
+</script>
+{% endblock content %}

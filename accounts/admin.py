@@ -31,7 +31,7 @@ class CustomUserAdmin(UserAdmin, ModelAdmin):
     model = CustomUser
     list_display = (
         'username', 'email', 'level_badge', 'last_login_info', 
-        'projects_count', 'is_active_session', 'date_joined'
+        'orders_count', 'is_active_session', 'date_joined'
     )
     list_filter = ('user_level', 'is_staff', 'is_superuser', 'is_active', 'groups', 'is_active_session')
     search_fields = ('email', 'username', 'first_name', 'last_name', 'last_login_ip')
@@ -62,7 +62,7 @@ class CustomUserAdmin(UserAdmin, ModelAdmin):
     
     def get_queryset(self, request):
         return super().get_queryset(request).annotate(
-            projects_count=Count('projects')
+            orders_count=Count('orders')
         )
     
     @display(description="Level", ordering="user_level")
@@ -84,13 +84,13 @@ class CustomUserAdmin(UserAdmin, ModelAdmin):
             )
         return "Never"
     
-    @display(description="Projects", ordering="projects_count")
-    def projects_count(self, obj):
-        count = obj.projects_count
+    @display(description="Orders", ordering="orders_count")
+    def orders_count(self, obj):
+        count = obj.orders_count
         if count > 0:
-            url = reverse('admin:projects_project_changelist') + f'?user__id__exact={obj.id}'
-            return format_html('<a href="{}">{} projects</a>', url, count)
-        return "No projects"
+            url = reverse('admin:shop_order_changelist') + f'?user__id__exact={obj.id}'
+            return format_html('<a href="{}">{} orders</a>', url, count)
+        return "No orders"
     
     def get_readonly_fields(self, request, obj=None):
         readonly = ['last_login_ip', 'last_user_agent', 'login_count']

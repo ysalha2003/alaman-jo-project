@@ -8,7 +8,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                     </svg>
                 </div>
-                <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow-lg bg-base-100 dark:bg-gray-800 rounded-xl w-72 max-h-96 overflow-y-auto">
+                <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow-lg bg-base-100 dark:bg-gray-800 rounded-xl w-64 max-h-96 overflow-y-auto">
                     <!-- Mobile Search -->
                     <li class="mb-2">
                         <form action="{% url 'shop:product_list' %}" method="get" class="flex">
@@ -25,62 +25,37 @@
                     <li><a href="{% url 'shop:home' %}" class="flex items-center py-3">
                         <span class="mr-3">🏠</span>Home
                     </a></li>
+                    <li><a href="{% url 'shop:product_list' %}" class="flex items-center py-3">
+                        <span class="mr-3">🔧</span>All Parts
+                    </a></li>
                     
-                    <!-- Mobile Products Menu -->
+                    <!-- Mobile Categories -->
                     <li>
                         <details>
                             <summary class="py-3">
-                                <span class="mr-3">🛍️</span>Products
+                                <span class="mr-3">📂</span>Categories
                             </summary>
                             <ul class="p-2 bg-base-200 dark:bg-gray-700 rounded-lg">
-                                <!-- E-Mobility Submenu -->
-                                <li>
-                                    <details>
-                                        <summary class="py-2 text-green-600 font-medium">
-                                            <span class="mr-2">⚡</span>E-Mobility
-                                        </summary>
-                                        <ul class="p-2 bg-base-300 dark:bg-gray-600 rounded-lg ml-2">
-                                            <li><a href="{% url 'shop:product_list' %}?vehicle=fat_bike" class="py-2 text-sm">
-                                                <span class="mr-2">🚲</span>Fat Bike
-                                            </a></li>
-                                            <li><a href="{% url 'shop:product_list' %}?vehicle=e_bike" class="py-2 text-sm">
-                                                <span class="mr-2">⚡</span>E-Bike
-                                            </a></li>
-                                            <li><a href="{% url 'shop:product_list' %}?vehicle=e_scooter" class="py-2 text-sm">
-                                                <span class="mr-2">🛴</span>E-Scooter
-                                            </a></li>
-                                            <li><a href="{% url 'shop:product_list' %}?vehicle=child_e_scooter" class="py-2 text-sm">
-                                                <span class="mr-2">👶</span>Child E-Scooter
-                                            </a></li>
-                                            <li><a href="{% url 'shop:product_list' %}?vehicle=child_dirt_bike" class="py-2 text-sm">
-                                                <span class="mr-2">🏍️</span>Child Dirt Bike
-                                            </a></li>
-                                        </ul>
-                                    </details>
-                                </li>
-                                
-                                <!-- Spare Parts Submenu -->
-                                <li>
-                                    <details>
-                                        <summary class="py-2 text-blue-600 font-medium">
-                                            <span class="mr-2">🔧</span>Spare Parts
-                                        </summary>
-                                        <ul class="p-2 bg-base-300 dark:bg-gray-600 rounded-lg ml-2">
-                                            {% for category in shop_categories %}
-                                            <li><a href="{% url 'shop:category_detail' category.slug %}" class="py-2 text-sm">
-                                                {{ category.name }}
-                                            </a></li>
-                                            {% endfor %}
-                                            <div class="divider my-1"></div>
-                                            <li><a href="{% url 'shop:product_list' %}" class="text-blue-600 font-medium py-2 text-sm">
-                                                View All Parts →
-                                            </a></li>
-                                        </ul>
-                                    </details>
-                                </li>
+                                {% for category in shop_categories %}
+                                <li><a href="{% url 'shop:category_detail' category.slug %}" class="py-2 text-sm">
+                                    {{ category.name }}
+                                </a></li>
+                                {% endfor %}
+                                <div class="divider my-1"></div>
+                                <li><a href="{% url 'shop:product_list' %}" class="text-green-600 font-medium py-2 text-sm">
+                                    View All →
+                                </a></li>
                             </ul>
                         </details>
                     </li>
+                    
+                    <!-- Mobile Vehicle Types -->
+                    <li><a href="{% url 'shop:product_list' %}?vehicle=e_bike" class="flex items-center py-3 text-green-600 font-medium">
+                        <span class="mr-3">⚡</span>E-Bike Parts
+                    </a></li>
+                    <li><a href="{% url 'shop:product_list' %}?vehicle=e_scooter" class="flex items-center py-3 text-blue-600 font-medium">
+                        <span class="mr-3">🛴</span>E-Scooter Parts
+                    </a></li>
                     
                     {% if user.is_authenticated %}
                     <li><a href="{% url 'shop:maintenance_quote' %}" class="flex items-center py-3 text-purple-600 font-medium">
@@ -110,98 +85,46 @@
                 <li><a href="{% url 'shop:home' %}" class="rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors {% if request.resolver_match.url_name == 'home' %}bg-gray-100 dark:bg-gray-800{% endif %}">
                     Home
                 </a></li>
+                <li><a href="{% url 'shop:product_list' %}" class="rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors {% if 'product' in request.resolver_match.url_name %}bg-gray-100 dark:bg-gray-800{% endif %}">
+                    All Parts
+                </a></li>
                 
-                <!-- Desktop Products Mega Menu -->
+                <!-- Desktop Categories Dropdown -->
                 <li>
                     <details>
                         <summary class="rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
-                            Products
+                            Categories
                             <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                             </svg>
                         </summary>
-                        <ul class="p-4 bg-base-100 dark:bg-gray-800 rounded-xl shadow-xl w-[600px] z-50 mt-2">
-                            <div class="grid grid-cols-2 gap-6">
-                                <!-- E-Mobility Column -->
+                        <ul class="p-2 bg-base-100 dark:bg-gray-800 rounded-xl shadow-lg w-64 z-50 mt-2">
+                            {% for category in shop_categories %}
+                            <li><a href="{% url 'shop:category_detail' category.slug %}" class="flex items-center p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                                <span class="mr-3 text-lg">🔧</span>
                                 <div>
-                                    <div class="flex items-center mb-4 pb-2 border-b border-gray-200 dark:border-gray-700">
-                                        <span class="text-2xl mr-3">⚡</span>
-                                        <h3 class="font-bold text-lg text-green-600">E-Mobility</h3>
-                                    </div>
-                                    <div class="space-y-2">
-                                        <a href="{% url 'shop:product_list' %}?vehicle=fat_bike" class="flex items-center p-3 rounded-lg hover:bg-green-50 dark:hover:bg-green-900/20 transition-colors group">
-                                            <span class="text-xl mr-3 group-hover:scale-110 transition-transform">🚲</span>
-                                            <div>
-                                                <div class="font-medium">Fat Bike</div>
-                                                <div class="text-xs text-gray-500 dark:text-gray-400">Heavy-duty off-road bikes</div>
-                                            </div>
-                                        </a>
-                                        
-                                        <a href="{% url 'shop:product_list' %}?vehicle=e_bike" class="flex items-center p-3 rounded-lg hover:bg-green-50 dark:hover:bg-green-900/20 transition-colors group">
-                                            <span class="text-xl mr-3 group-hover:scale-110 transition-transform">⚡</span>
-                                            <div>
-                                                <div class="font-medium">E-Bike</div>
-                                                <div class="text-xs text-gray-500 dark:text-gray-400">Electric bicycles & accessories</div>
-                                            </div>
-                                        </a>
-                                        
-                                        <a href="{% url 'shop:product_list' %}?vehicle=e_scooter" class="flex items-center p-3 rounded-lg hover:bg-green-50 dark:hover:bg-green-900/20 transition-colors group">
-                                            <span class="text-xl mr-3 group-hover:scale-110 transition-transform">🛴</span>
-                                            <div>
-                                                <div class="font-medium">E-Scooter</div>
-                                                <div class="text-xs text-gray-500 dark:text-gray-400">Electric scooters & parts</div>
-                                            </div>
-                                        </a>
-                                        
-                                        <a href="{% url 'shop:product_list' %}?vehicle=child_e_scooter" class="flex items-center p-3 rounded-lg hover:bg-green-50 dark:hover:bg-green-900/20 transition-colors group">
-                                            <span class="text-xl mr-3 group-hover:scale-110 transition-transform">👶</span>
-                                            <div>
-                                                <div class="font-medium">Child E-Scooter</div>
-                                                <div class="text-xs text-gray-500 dark:text-gray-400">Safe e-scooters for kids</div>
-                                            </div>
-                                        </a>
-                                        
-                                        <a href="{% url 'shop:product_list' %}?vehicle=child_dirt_bike" class="flex items-center p-3 rounded-lg hover:bg-green-50 dark:hover:bg-green-900/20 transition-colors group">
-                                            <span class="text-xl mr-3 group-hover:scale-110 transition-transform">🏍️</span>
-                                            <div>
-                                                <div class="font-medium">Child Dirt Bike</div>
-                                                <div class="text-xs text-gray-500 dark:text-gray-400">Electric dirt bikes for children</div>
-                                            </div>
-                                        </a>
-                                    </div>
+                                    <div class="font-medium">{{ category.name }}</div>
+                                    {% if category.description %}
+                                    <div class="text-xs text-gray-500 dark:text-gray-400">{{ category.description|truncatewords:8 }}</div>
+                                    {% endif %}
                                 </div>
-                                
-                                <!-- Spare Parts Column -->
-                                <div>
-                                    <div class="flex items-center mb-4 pb-2 border-b border-gray-200 dark:border-gray-700">
-                                        <span class="text-2xl mr-3">🔧</span>
-                                        <h3 class="font-bold text-lg text-blue-600">Spare Parts</h3>
-                                    </div>
-                                    <div class="space-y-2 max-h-80 overflow-y-auto">
-                                        {% for category in shop_categories %}
-                                        <a href="{% url 'shop:category_detail' category.slug %}" class="flex items-center p-3 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors group">
-                                            <span class="text-lg mr-3 group-hover:scale-110 transition-transform">🔧</span>
-                                            <div>
-                                                <div class="font-medium">{{ category.name }}</div>
-                                                {% if category.description %}
-                                                <div class="text-xs text-gray-500 dark:text-gray-400">{{ category.description|truncatewords:6 }}</div>
-                                                {% endif %}
-                                            </div>
-                                        </a>
-                                        {% endfor %}
-                                        
-                                        <div class="pt-2 mt-2 border-t border-gray-200 dark:border-gray-700">
-                                            <a href="{% url 'shop:product_list' %}" class="flex items-center p-3 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors text-blue-600 font-medium group">
-                                                <span class="text-lg mr-3 group-hover:translate-x-1 transition-transform">→</span>
-                                                <div>View All Parts</div>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            </a></li>
+                            {% endfor %}
+                            <div class="divider my-1"></div>
+                            <li><a href="{% url 'shop:product_list' %}" class="text-green-600 font-medium p-3 rounded-lg hover:bg-green-50 dark:hover:bg-green-900/20 transition-colors">
+                                View All Parts →
+                            </a></li>
                         </ul>
                     </details>
                 </li>
+                
+                <!-- Quick Vehicle Links -->
+                <li><a href="{% url 'shop:product_list' %}?vehicle=e_bike" class="text-green-600 font-medium rounded-lg hover:bg-green-50 dark:hover:bg-green-900/20 transition-colors">
+                    ⚡ E-Bike
+                </a></li>
+                <li><a href="{% url 'shop:product_list' %}?vehicle=e_scooter" class="text-blue-600 font-medium rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors">
+                    🛴 E-Scooter
+                </a></li>
                 
                 {% if user.is_authenticated %}
                 <li><a href="{% url 'shop:maintenance_quote' %}" class="text-purple-600 font-medium rounded-lg hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-colors">
@@ -222,7 +145,7 @@
                     <div class="relative">
                         <input type="search" 
                                name="search" 
-                               placeholder="Search products..." 
+                               placeholder="Search spare parts..." 
                                class="input input-bordered input-sm w-full max-w-xs rounded-full pl-10 pr-4 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
                                value="{{ request.GET.search }}">
                         <svg class="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -411,7 +334,7 @@
         <form action="{% url 'shop:product_list' %}" method="get" class="flex items-center gap-2">
             <input type="search" 
                    name="search" 
-                   placeholder="Search products..." 
+                   placeholder="Search spare parts..." 
                    class="input input-bordered flex-1 rounded-full" 
                    value="{{ request.GET.search }}"
                    autofocus>

@@ -1,0 +1,109 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Order {{ order.order_number }} - Alamana-jo{% endblock title %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto px-4 py-8">
+    <!-- Breadcrumb -->
+    <div class="breadcrumbs text-sm mb-8">
+        <ul>
+            <li><a href="{% url 'shop:home' %}">Home</a></li>
+            <li><a href="{% url 'shop:order_history' %}">Orders</a></li>
+            <li>{{ order.order_number }}</li>
+        </ul>
+    </div>
+
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-8">
+        <div class="flex items-center justify-between mb-8">
+            <h1 class="text-2xl font-bold">Order {{ order.order_number }}</h1>
+            <div class="flex items-center gap-3">
+                {% if order.status == 'pending' %}
+                <span class="badge badge-warning">Pending Payment</span>
+                {% elif order.status == 'paid' %}
+                <span class="badge badge-info">Paid</span>
+                {% elif order.status == 'processing' %}
+                <span class="badge badge-primary">Processing</span>
+                {% elif order.status == 'shipped' %}
+                <span class="badge badge-info">Shipped</span>
+                {% elif order.status == 'delivered' %}
+                <span class="badge badge-success">Delivered</span>
+                {% elif order.status == 'cancelled' %}
+                <span class="badge badge-error">Cancelled</span>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Order Items -->
+            <div class="lg:col-span-2">
+                <h2 class="text-lg font-semibold mb-4">Order Items</h2>
+                <div class="space-y-4">
+                    {% for item in order.items.all %}
+                    <div class="flex items-center gap-4 p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
+                        {% if item.product.images.first %}
+                        <img src="{{ item.product.images.first.image.url }}" 
+                             alt="{{ item.product.name }}" 
+                             class="w-16 h-16 object-cover rounded-lg">
+                        {% else %}
+                        <div class="w-16 h-16 bg-gray-200 dark:bg-gray-700 rounded-lg flex items-center justify-center">
+                            <span class="text-gray-400">🔧</span>
+                        </div>
+                        {% endif %}
+                        <div class="flex-1">
+                            <h3 class="font-medium">{{ item.product_name }}</h3>
+                            <p class="text-sm text-gray-500">{{ item.product_brand }} - {{ item.product_sku }}</p>
+                            <p class="text-sm">{{ item.quantity }} × €{{ item.unit_price }}</p>
+                        </div>
+                        <div class="font-medium">€{{ item.total_price }}</div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Order Summary -->
+            <div>
+                <h2 class="text-lg font-semibold mb-4">Order Summary</h2>
+                <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 space-y-3">
+                    <div class="flex justify-between">
+                        <span>Subtotal:</span>
+                        <span>€{{ order.subtotal }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>Shipping:</span>
+                        <span>€{{ order.shipping_cost }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>Tax:</span>
+                        <span>€{{ order.tax_amount }}</span>
+                    </div>
+                    <div class="border-t pt-3 flex justify-between font-bold text-lg">
+                        <span>Total:</span>
+                        <span>€{{ order.total_amount }}</span>
+                    </div>
+                </div>
+
+                <!-- Shipping Address -->
+                <div class="mt-6">
+                    <h3 class="font-semibold mb-2">Shipping Address</h3>
+                    <div class="text-sm text-gray-600 dark:text-gray-400">
+                        <p>{{ order.first_name }} {{ order.last_name }}</p>
+                        <p>{{ order.shipping_address_line1 }}</p>
+                        {% if order.shipping_address_line2 %}
+                        <p>{{ order.shipping_address_line2 }}</p>
+                        {% endif %}
+                        <p>{{ order.shipping_postal_code }} {{ order.shipping_city }}</p>
+                        <p>{{ order.shipping_country }}</p>
+                    </div>
+                </div>
+
+                <!-- Order Date -->
+                <div class="mt-6">
+                    <h3 class="font-semibold mb-2">Order Date</h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">{{ order.created_at|date:"F d, Y g:i A" }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

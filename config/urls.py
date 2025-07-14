@@ -11,9 +11,9 @@ from accounts.forms import (
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('core.urls', namespace='core')),
+    path('', include('shop.urls', namespace='shop')),  # Shop as main app
+    path('info/', include('core.urls', namespace='core')),  # Move core to /info/
     path('accounts/', include('accounts.urls', namespace='accounts')),
-    path('manage/', include('projects.urls', namespace='projects')),  # Add this line
 
     # Password reset URLs
     path('accounts/password_reset/', auth_views.PasswordResetView.as_view(
@@ -52,12 +52,14 @@ urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),
 ]
 
+# Serve media files in development
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
     if 'debug_toolbar' in settings.INSTALLED_APPS:
         urlpatterns.append(path('__debug__/', include('debug_toolbar.urls')))
 
 # Admin customization
-admin.site.site_header = "Project Management Admin"
-admin.site.site_title = "Project Admin"
-admin.site.index_title = "Welcome to Project Management Portal"
+admin.site.site_header = "Alamana-jo Admin"
+admin.site.site_title = "Alamana-jo"
+admin.site.index_title = "Welcome to Alamana-jo Administration"

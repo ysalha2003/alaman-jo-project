@@ -2,41 +2,157 @@
 <html lang="en" x-data="themeSwitcher()" x-init="init()" :data-theme="theme">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Django + Tailwind{% endblock title %}</title>
-    <meta name="description" content="{% block description %}Modern Django boilerplate{% endblock description %}">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚀</text></svg>">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>{% block title %}Alamana-jo - Quality Bike Parts & Service{% endblock title %}</title>
+    <meta name="description" content="{% block description %}Professional spare parts and maintenance services for bikes, e-bikes, and e-scooters in Antwerpen. Quality parts, expert service, fast delivery.{% endblock description %}">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="{% block og_title %}Alamana-jo{% endblock og_title %}">
+    <meta property="og:description" content="{% block og_description %}Professional bike parts and service{% endblock og_description %}">
+    <meta property="og:image" content="{% block og_image %}{% load static %}{% static 'images/og-image.jpg' %}{% endblock og_image %}">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:title" content="{% block twitter_title %}Alamana-jo{% endblock twitter_title %}">
+    <meta property="twitter:description" content="{% block twitter_description %}Professional bike parts and service{% endblock twitter_description %}">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔧</text></svg>">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔧</text></svg>">
+    
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
+    <!-- Styles -->
     {% load static %}
-    <link rel="stylesheet" href="{% static 'css/dist/output.css' %}">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.12/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'sans': ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-in-out',
+                        'slide-up': 'slideUp 0.3s ease-out',
+                    },
+                },
+            },
+        }
+    </script>
+    
+    <!-- Alpine.js -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    
+    <!-- PWA Support -->
+    <meta name="theme-color" content="#059669">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Alamana-jo">
+    
+    <!-- Performance hints -->
+    <link rel="dns-prefetch" href="//fonts.googleapis.com">
+    <link rel="dns-prefetch" href="//cdn.jsdelivr.net">
+    
+    {% block extra_head %}{% endblock extra_head %}
 </head>
-<body class="bg-gray-50 dark:bg-gray-900 font-sans text-gray-900 dark:text-gray-100 min-h-screen flex flex-col">
+<body class="bg-gray-50 dark:bg-gray-900 font-sans text-gray-900 dark:text-gray-100 min-h-screen flex flex-col antialiased">
+    
+    <!-- Site Notification Banner -->
+    {% if shop_settings.is_notification_active and shop_settings.site_notification %}
+    <div class="bg-gradient-to-r from-yellow-400 to-orange-400 text-yellow-900 p-3 text-center text-sm font-medium shadow-md relative" role="alert">
+        <div class="container mx-auto flex items-center justify-center">
+            <svg class="w-5 h-5 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <span class="flex-1">{{ shop_settings.site_notification|safe }}</span>
+        </div>
+        <button onclick="this.parentElement.style.display='none'" 
+                class="absolute right-2 top-1/2 transform -translate-y-1/2 text-yellow-900 hover:text-yellow-800 p-1"
+                aria-label="Close notification">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+        </button>
+    </div>
+    {% endif %}
+
+    <!-- Navigation -->
     {% include 'base/_navbar.html' %}
 
-    <main class="container mx-auto px-4 py-8 flex-grow">
+    <!-- Main Content -->
+    <main class="flex-grow">
+        <!-- Loading Indicator -->
+        <div id="loading-indicator" class="fixed top-0 left-0 w-full h-1 bg-blue-500 transform -translate-x-full transition-transform duration-300 z-50"></div>
+        
+        <!-- Messages -->
         {% if messages %}
-            <div class="max-w-4xl mx-auto space-y-2 mb-6">
-            {% for message in messages %}
-                <div role="alert" class="alert {{ message.tags }} shadow-sm animate-fade-in">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-5 w-5" fill="none" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    <span>{{ message }}</span>
+            <div class="container mx-auto px-4 py-4">
+                <div class="max-w-4xl mx-auto space-y-2">
+                    {% for message in messages %}
+                        <div role="alert" class="alert {{ message.tags }} shadow-sm animate-fade-in rounded-lg">
+                            {% if message.tags == 'success' %}
+                                <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-5 w-5" fill="none" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                            {% elif message.tags == 'error' %}
+                                <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-5 w-5" fill="none" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                            {% elif message.tags == 'warning' %}
+                                <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-5 w-5" fill="none" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16c-.77.833.192 2.5 1.732 2.5z" />
+                                </svg>
+                            {% else %}
+                                <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-5 w-5" fill="none" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                            {% endif %}
+                            <span>{{ message }}</span>
+                            <button onclick="this.parentElement.remove()" class="btn btn-sm btn-circle btn-ghost ml-auto">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    {% endfor %}
                 </div>
-            {% endfor %}
             </div>
         {% endif %}
         
-        {% block content %}{% endblock content %}
+        <!-- Page Content -->
+        <div class="container mx-auto px-4 py-6 sm:py-8">
+            {% block content %}{% endblock content %}
+        </div>
     </main>
 
+    <!-- Footer -->
     {% include 'base/_footer.html' %}
     
+    <!-- Toast Container -->
+    <div id="toast-container" class="fixed top-20 right-4 z-50 space-y-2"></div>
+    
+    <!-- Global Loading Overlay -->
+    <div id="global-loading" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden">
+        <div class="flex items-center justify-center h-full">
+            <div class="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-xl">
+                <div class="flex items-center space-x-3">
+                    <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
+                    <span class="text-gray-700 dark:text-gray-300">Loading...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Scripts -->
     <script>
+        // Theme Switcher with enhanced functionality
         function themeSwitcher() {
             return {
                 theme: 'light',
@@ -47,6 +163,13 @@
                     const initialTheme = storedTheme || (systemPrefersDark ? 'dark' : 'light');
                     this.setTheme(initialTheme);
 
+                    // Watch for system theme changes
+                    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+                        if (!localStorage.getItem('theme')) {
+                            this.setTheme(e.matches ? 'dark' : 'light');
+                        }
+                    });
+
                     this.$watch('isDark', (isDark) => {
                         this.setTheme(isDark ? 'dark' : 'light');
                     });
@@ -56,9 +179,150 @@
                     this.isDark = (newTheme === 'dark');
                     localStorage.setItem('theme', newTheme);
                     document.documentElement.classList.toggle('dark', this.isDark);
+                    
+                    // Update meta theme color
+                    const metaThemeColor = document.querySelector("meta[name=theme-color]");
+                    if (metaThemeColor) {
+                        metaThemeColor.setAttribute("content", this.isDark ? "#1f2937" : "#059669");
+                    }
                 }
             }
         }
+
+        // Global utility functions
+        window.AlamanaUtils = {
+            // Show loading indicator
+            showLoading() {
+                document.getElementById('global-loading').classList.remove('hidden');
+            },
+            
+            // Hide loading indicator
+            hideLoading() {
+                document.getElementById('global-loading').classList.add('hidden');
+            },
+            
+            // Show toast notification
+            showToast(message, type = 'info', duration = 5000) {
+                const container = document.getElementById('toast-container');
+                const toast = document.createElement('div');
+                const typeColors = {
+                    success: 'alert-success',
+                    error: 'alert-error',
+                    warning: 'alert-warning',
+                    info: 'alert-info'
+                };
+                
+                toast.className = `alert ${typeColors[type]} shadow-lg animate-fade-in max-w-sm`;
+                toast.innerHTML = `
+                    <span>${message}</span>
+                    <button onclick="this.parentElement.remove()" class="btn btn-sm btn-circle btn-ghost">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                `;
+                
+                container.appendChild(toast);
+                
+                // Auto remove after duration
+                setTimeout(() => {
+                    if (toast.parentElement) {
+                        toast.remove();
+                    }
+                }, duration);
+            },
+            
+            // Smooth scroll to element
+            scrollTo(element, offset = 0) {
+                const targetElement = typeof element === 'string' ? document.querySelector(element) : element;
+                if (targetElement) {
+                    const elementPosition = targetElement.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - offset;
+                    
+                    window.scrollTo({
+                        top: offsetPosition,
+                        behavior: 'smooth'
+                    });
+                }
+            },
+            
+            // Format currency
+            formatCurrency(amount, currency = 'EUR', locale = 'nl-BE') {
+                return new Intl.NumberFormat(locale, {
+                    style: 'currency',
+                    currency: currency
+                }).format(amount);
+            },
+            
+            // Copy to clipboard
+            async copyToClipboard(text) {
+                try {
+                    await navigator.clipboard.writeText(text);
+                    this.showToast('Copied to clipboard!', 'success');
+                } catch (err) {
+                    console.error('Failed to copy: ', err);
+                    this.showToast('Failed to copy', 'error');
+                }
+            }
+        };
+
+        // Enhanced form handling for better mobile experience
+        document.addEventListener('DOMContentLoaded', function() {
+            // Auto-hide mobile keyboard on scroll
+            let isScrolling = false;
+            window.addEventListener('scroll', function() {
+                if (!isScrolling) {
+                    isScrolling = true;
+                    if (document.activeElement && document.activeElement.tagName.toLowerCase() === 'input') {
+                        document.activeElement.blur();
+                    }
+                    setTimeout(() => { isScrolling = false; }, 100);
+                }
+            });
+
+            // Enhanced loading states for forms
+            const forms = document.querySelectorAll('form[method="post"]');
+            forms.forEach(form => {
+                form.addEventListener('submit', function(e) {
+                    const submitBtn = form.querySelector('button[type="submit"]');
+                    if (submitBtn && !submitBtn.disabled) {
+                        submitBtn.disabled = true;
+                        const originalText = submitBtn.innerHTML;
+                        submitBtn.innerHTML = `
+                            <div class="flex items-center">
+                                <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                                Processing...
+                            </div>
+                        `;
+                        
+                        // Re-enable after 10 seconds as fallback
+                        setTimeout(() => {
+                            submitBtn.disabled = false;
+                            submitBtn.innerHTML = originalText;
+                        }, 10000);
+                    }
+                });
+            });
+        });
+
+        // Viewport height fix for mobile browsers
+        function setVH() {
+            let vh = window.innerHeight * 0.01;
+            document.documentElement.style.setProperty('--vh', `${vh}px`);
+        }
+        
+        setVH();
+        window.addEventListener('resize', setVH);
+        window.addEventListener('orientationchange', setVH);
+
+        // Performance monitoring
+        window.addEventListener('load', function() {
+            // Hide loading indicator
+            document.getElementById('loading-indicator').style.transform = 'translateX(0)';
+            setTimeout(() => {
+                document.getElementById('loading-indicator').style.transform = 'translateX(100%)';
+            }, 200);
+        });
     </script>
     
     {% block extra_js %}{% endblock extra_js %}

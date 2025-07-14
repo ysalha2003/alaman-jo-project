@@ -1,0 +1,492 @@
+from django.db import models
+from django.contrib.auth import get_user_model
+from django.urls import reverse
+from django.core.validators import MinValueValidator, MaxValueValidator
+from decimal import Decimal
+import uuid
+
+User = get_user_model()
+
+class Category(models.Model):
+    """Product categories for spare parts and accessories"""
+    
+    name = models.CharField(max_length=100, unique=True)
+    slug = models.SlugField(max_length=100, unique=True)
+    description = models.TextField(blank=True)
+    image = models.ImageField(upload_to='categories/', blank=True, null=True)
+    is_active = models.BooleanField(default=True)
+    sort_order = models.PositiveIntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        ordering = ['sort_order', 'name']
+        verbose_name_plural = 'Categories'
+    
+    def __str__(self):
+        return self.name
+    
+    def get_absolute_url(self):
+        return reverse('shop:category_detail', kwargs={'slug': self.slug})
+
+
+class Product(models.Model):
+    """Main product model for bike/e-bike/e-scooter spare parts and accessories"""
+    
+    PRODUCT_TYPES = [
+        ('brake_parts', 'Brake Parts'),
+        ('drive_train', 'Drive Train'),
+        ('wheels_tires', 'Wheels & Tires'),
+        ('lighting', 'Lighting'),
+        ('batteries', 'Batteries & Charging'),
+        ('electronics', 'Electronics'),
+        ('frame_parts', 'Frame Parts'),
+        ('handlebars', 'Handlebars & Grips'),
+        ('saddles', 'Saddles & Seatposts'),
+        ('tools', 'Tools & Maintenance'),
+        ('safety', 'Safety & Protection'),
+        ('accessories', 'Accessories'),
+    ]
+    
+    VEHICLE_COMPATIBILITY = [
+        ('bike', 'Traditional Bike'),
+        ('e_bike', 'E-Bike'),
+        ('e_scooter', 'E-Scooter'),
+        ('universal', 'Universal'),
+    ]
+    
+    AVAILABILITY_STATUS = [
+        ('in_stock', 'In Stock'),
+        ('low_stock', 'Low Stock'),
+        ('out_of_stock', 'Out of Stock'),
+        ('pre_order', 'Pre-Order'),
+    ]
+    
+    # Basic Info
+    name = models.CharField(max_length=200)
+    slug = models.SlugField(max_length=200, unique=True)
+    description = models.TextField()
+    short_description = models.CharField(max_length=300, help_text="Brief product summary")
+    
+    # Categorization
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='products')
+    product_type = models.CharField(max_length=20, choices=PRODUCT_TYPES, default='accessories')
+    vehicle_compatibility = models.CharField(max_length=20, choices=VEHICLE_COMPATIBILITY, default='universal')
+    brand = models.CharField(max_length=100)
+    model_number = models.CharField(max_length=100, blank=True, help_text="Manufacturer model number")
+    
+    # Pricing
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    compare_price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True, 
+                                      help_text="Original price for sale display")
+    cost_price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True,
+                                   help_text="Cost for margin calculation")
+    
+    # Inventory
+    stock_quantity = models.PositiveIntegerField(default=0)
+    availability_status = models.CharField(max_length=20, choices=AVAILABILITY_STATUS, default='in_stock')
+    sku = models.CharField(max_length=50, unique=True, help_text="Stock Keeping Unit")
+    
+    # Technical Specifications
+    weight = models.DecimalField(max_digits=5, decimal_places=1, blank=True, null=True, help_text="Weight in grams")
+    dimensions = models.CharField(max_length=100, blank=True, help_text="L x W x H in mm")
+    material = models.CharField(max_length=100, blank=True, help_text="Primary material")
+    color = models.CharField(max_length=50, blank=True)
+    
+    # Compatibility
+    compatibility_notes = models.TextField(blank=True, help_text="Compatible models/brands")
+    
+    # SEO & Marketing
+    meta_title = models.CharField(max_length=160, blank=True)
+    meta_description = models.CharField(max_length=300, blank=True)
+    is_featured = models.BooleanField(default=False, help_text="Show on homepage")
+    is_bestseller = models.BooleanField(default=False)
+    is_new_arrival = models.BooleanField(default=False)
+    
+    # Status
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        ordering = ['-created_at']
+        indexes = [
+            models.Index(fields=['product_type', 'is_active']),
+            models.Index(fields=['category', 'is_active']),
+            models.Index(fields=['vehicle_compatibility', 'is_active']),
+            models.Index(fields=['is_featured', 'is_active']),
+        ]
+    
+    def __str__(self):
+        return f"{self.brand} {self.name}"
+    
+    def get_absolute_url(self):
+        return reverse('shop:product_detail', kwargs={'slug': self.slug})
+    
+    @property
+    def is_on_sale(self):
+        return self.compare_price and self.compare_price > self.price
+    
+    @property
+    def sale_percentage(self):
+        if self.is_on_sale:
+            return int(((self.compare_price - self.price) / self.compare_price) * 100)
+        return 0
+    
+    @property
+    def is_low_stock(self):
+        return self.stock_quantity <= 5
+    
+    @property
+    def is_in_stock(self):
+        return self.stock_quantity > 0 and self.availability_status == 'in_stock'
+
+
+class ProductImage(models.Model):
+    """Product images with ordering"""
+    
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='images')
+    image = models.ImageField(upload_to='products/')
+    alt_text = models.CharField(max_length=200, help_text="Alt text for accessibility")
+    is_primary = models.BooleanField(default=False)
+    sort_order = models.PositiveIntegerField(default=0)
+    
+    class Meta:
+        ordering = ['sort_order']
+    
+    def __str__(self):
+        return f"{self.product.name} - Image {self.sort_order}"
+
+
+class ProductSpecification(models.Model):
+    """Additional product specifications"""
+    
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='specifications')
+    name = models.CharField(max_length=100, help_text="e.g., Thread Size")
+    value = models.CharField(max_length=200, help_text="e.g., M6 x 1.0")
+    sort_order = models.PositiveIntegerField(default=0)
+    
+    class Meta:
+        ordering = ['sort_order']
+        unique_together = ['product', 'name']
+    
+    def __str__(self):
+        return f"{self.product.name} - {self.name}: {self.value}"
+
+
+class Cart(models.Model):
+    """Shopping cart for users and anonymous sessions"""
+    
+    user = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True)
+    session_key = models.CharField(max_length=40, blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    def __str__(self):
+        if self.user:
+            return f"Cart for {self.user.username}"
+        return f"Anonymous cart {self.session_key}"
+    
+    @property
+    def total_items(self):
+        return sum(item.quantity for item in self.items.all())
+    
+    @property
+    def total_price(self):
+        return sum(item.total_price for item in self.items.all())
+
+
+class CartItem(models.Model):
+    """Items in shopping cart"""
+    
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name='items')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=1, validators=[MinValueValidator(1)])
+    added_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        unique_together = ['cart', 'product']
+    
+    def __str__(self):
+        return f"{self.quantity}x {self.product.name}"
+    
+    @property
+    def total_price(self):
+        return self.product.price * self.quantity
+
+
+class Order(models.Model):
+    """Customer orders"""
+    
+    STATUS_CHOICES = [
+        ('pending', 'Pending Payment'),
+        ('paid', 'Paid'),
+        ('processing', 'Processing'),
+        ('shipped', 'Shipped'),
+        ('delivered', 'Delivered'),
+        ('cancelled', 'Cancelled'),
+        ('refunded', 'Refunded'),
+    ]
+    
+    # Order Info
+    order_number = models.CharField(max_length=20, unique=True, editable=False)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='orders', blank=True, null=True)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    
+    # Customer Info
+    email = models.EmailField()
+    first_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=50)
+    phone = models.CharField(max_length=20, blank=True)
+    
+    # Shipping Address
+    shipping_address_line1 = models.CharField(max_length=200)
+    shipping_address_line2 = models.CharField(max_length=200, blank=True)
+    shipping_city = models.CharField(max_length=100)
+    shipping_state = models.CharField(max_length=100)
+    shipping_postal_code = models.CharField(max_length=20)
+    shipping_country = models.CharField(max_length=100, default='Belgium')
+    
+    # Billing Address (can be same as shipping)
+    billing_same_as_shipping = models.BooleanField(default=True)
+    billing_address_line1 = models.CharField(max_length=200, blank=True)
+    billing_address_line2 = models.CharField(max_length=200, blank=True)
+    billing_city = models.CharField(max_length=100, blank=True)
+    billing_state = models.CharField(max_length=100, blank=True)
+    billing_postal_code = models.CharField(max_length=20, blank=True)
+    billing_country = models.CharField(max_length=100, blank=True)
+    
+    # Pricing
+    subtotal = models.DecimalField(max_digits=10, decimal_places=2)
+    shipping_cost = models.DecimalField(max_digits=10, decimal_places=2, default=Decimal('0.00'))
+    tax_amount = models.DecimalField(max_digits=10, decimal_places=2, default=Decimal('0.00'))
+    total_amount = models.DecimalField(max_digits=10, decimal_places=2)
+    
+    # Payment
+    payment_method = models.CharField(max_length=50, blank=True)
+    payment_status = models.CharField(max_length=50, blank=True)
+    payment_intent_id = models.CharField(max_length=200, blank=True)
+    
+    # Tracking
+    tracking_number = models.CharField(max_length=100, blank=True)
+    notes = models.TextField(blank=True)
+    
+    # Timestamps
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    shipped_at = models.DateTimeField(blank=True, null=True)
+    delivered_at = models.DateTimeField(blank=True, null=True)
+    
+    class Meta:
+        ordering = ['-created_at']
+    
+    def __str__(self):
+        return f"Order {self.order_number}"
+    
+    def save(self, *args, **kwargs):
+        if not self.order_number:
+            self.order_number = self.generate_order_number()
+        super().save(*args, **kwargs)
+    
+    def generate_order_number(self):
+        """Generate unique order number"""
+        import random
+        import string
+        while True:
+            order_number = ''.join(random.choices(string.ascii_uppercase + string.digits, k=8))
+            if not Order.objects.filter(order_number=order_number).exists():
+                return order_number
+    
+    def get_absolute_url(self):
+        return reverse('shop:order_detail', kwargs={'order_number': self.order_number})
+
+
+class OrderItem(models.Model):
+    """Items in an order"""
+    
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items')
+    product = models.ForeignKey(Product, on_delete=models.PROTECT)
+    quantity = models.PositiveIntegerField()
+    unit_price = models.DecimalField(max_digits=10, decimal_places=2)
+    total_price = models.DecimalField(max_digits=10, decimal_places=2)
+    
+    # Product snapshot for historical record
+    product_name = models.CharField(max_length=200)
+    product_sku = models.CharField(max_length=50)
+    
+    def __str__(self):
+        return f"{self.quantity}x {self.product_name} (Order {self.order.order_number})"
+    
+    def save(self, *args, **kwargs):
+        if not self.product_name:
+            self.product_name = str(self.product)
+        if not self.product_sku:
+            self.product_sku = self.product.sku
+        if not self.unit_price:
+            self.unit_price = self.product.price
+        self.total_price = self.unit_price * self.quantity
+        super().save(*args, **kwargs)
+
+
+class Review(models.Model):
+    """Product reviews"""
+    
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='reviews')
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    rating = models.PositiveIntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
+    title = models.CharField(max_length=200)
+    comment = models.TextField()
+    is_verified_purchase = models.BooleanField(default=False)
+    is_approved = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        unique_together = ['product', 'user']
+        ordering = ['-created_at']
+    
+    def __str__(self):
+        return f"{self.user.username} - {self.product.name} ({self.rating}/5)"
+
+
+class Wishlist(models.Model):
+    """User wishlist"""
+    
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='wishlists')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        unique_together = ['user', 'product']
+        ordering = ['-created_at']
+    
+    def __str__(self):
+        return f"{self.user.username} - {self.product.name}"
+
+
+class MaintenanceQuote(models.Model):
+    """Maintenance quotation requests"""
+    
+    VEHICLE_TYPES = [
+        ('bike', 'Traditional Bike'),
+        ('e_bike', 'E-Bike'),
+        ('e_scooter', 'E-Scooter'),
+    ]
+    
+    URGENCY_LEVELS = [
+        ('low', 'Not Urgent'),
+        ('medium', 'Moderate'),
+        ('high', 'Urgent'),
+    ]
+    
+    STATUS_CHOICES = [
+        ('pending', 'Pending Review'),
+        ('reviewed', 'Under Review'),
+        ('quoted', 'Quote Sent'),
+        ('accepted', 'Quote Accepted'),
+        ('completed', 'Service Completed'),
+        ('cancelled', 'Cancelled'),
+    ]
+    
+    # Customer Info
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='maintenance_quotes')
+    full_name = models.CharField(max_length=100)
+    email = models.EmailField()
+    phone = models.CharField(max_length=20)
+    
+    # Vehicle Info
+    vehicle_type = models.CharField(max_length=20, choices=VEHICLE_TYPES)
+    vehicle_brand = models.CharField(max_length=100)
+    vehicle_model = models.CharField(max_length=100, blank=True)
+    purchase_year = models.PositiveIntegerField(blank=True, null=True)
+    
+    # Service Request
+    problem_description = models.TextField(help_text="Describe the issue or maintenance needed")
+    urgency = models.CharField(max_length=10, choices=URGENCY_LEVELS, default='medium')
+    preferred_contact_method = models.CharField(max_length=20, choices=[
+        ('email', 'Email'),
+        ('phone', 'Phone'),
+        ('both', 'Both Email and Phone')
+    ], default='email')
+    
+    # Internal Processing
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    admin_notes = models.TextField(blank=True, help_text="Internal notes for staff")
+    quoted_price = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True)
+    quote_notes = models.TextField(blank=True, help_text="Quote details for customer")
+    
+    # Timestamps
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    quoted_at = models.DateTimeField(blank=True, null=True)
+    
+    class Meta:
+        ordering = ['-created_at']
+    
+    def __str__(self):
+        return f"Quote #{self.id} - {self.full_name} ({self.vehicle_type})"
+
+
+class ContactMessage(models.Model):
+    """Contact form submissions"""
+    
+    SUBJECT_CHOICES = [
+        ('general', 'General Inquiry'),
+        ('order', 'Order Issue'),
+        ('product', 'Product Question'),
+        ('return', 'Return/Exchange'),
+        ('maintenance', 'Maintenance Service'),
+        ('parts', 'Parts Availability'),
+        ('quote', 'Request Quote'),
+        ('other', 'Other'),
+    ]
+    
+    STATUS_CHOICES = [
+        ('new', 'New'),
+        ('in_progress', 'In Progress'),
+        ('resolved', 'Resolved'),
+        ('closed', 'Closed'),
+    ]
+    
+    # Contact Information
+    name = models.CharField(max_length=100)
+    email = models.EmailField()
+    phone = models.CharField(max_length=20, blank=True)
+    
+    # Message Details
+    subject = models.CharField(max_length=20, choices=SUBJECT_CHOICES)
+    order_number = models.CharField(max_length=20, blank=True, help_text="If related to an order")
+    message = models.TextField()
+    
+    # Internal Management
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='new')
+    admin_notes = models.TextField(blank=True, help_text="Internal notes for staff")
+    assigned_to = models.ForeignKey(
+        User, 
+        on_delete=models.SET_NULL, 
+        null=True, 
+        blank=True,
+        related_name='assigned_contacts',
+        help_text="Staff member handling this inquiry"
+    )
+    
+    # Timestamps
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    resolved_at = models.DateTimeField(blank=True, null=True)
+    
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = 'Contact Message'
+        verbose_name_plural = 'Contact Messages'
+    
+    def __str__(self):
+        return f"{self.name} - {self.get_subject_display()} ({self.created_at.strftime('%Y-%m-%d')})"
+    
+    @property
+    def is_new(self):
+        return self.status == 'new'
+    
+    @property
+    def response_time(self):
+        """Time since message was created"""
+        from django.utils import timezone
+        return timezone.now() - self.created_at
