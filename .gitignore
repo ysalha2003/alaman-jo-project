@@ -103,3 +103,26 @@ Thumbs.db
 # Ignore source CSS files if you're using a build process
 /static/css/src/**/*.css
 !/static/css/src/input.css  # Keep your main input file
+
+
+# Gitignore file for a Django project
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+pip-selfcheck.json
+
+# Django
+*.log
+db.sqlite3
+/media/
+
+# Other
+.DS_Store
+.env
+*.local
