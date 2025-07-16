@@ -4,123 +4,403 @@
 {% block title %}Contact Us - Alamana-jo{% endblock title %}
 
 {% block content %}
-<div class="max-w-6xl mx-auto px-4 py-8">
+<div class="max-w-7xl mx-auto px-4 py-8">
     <!-- Breadcrumb -->
-    <div class="breadcrumbs text-sm mb-8">
-        <ul>
-            <li><a href="{% url 'shop:home' %}">Home</a></li>
-            <li>Contact</li>
-        </ul>
+    <nav class="flex mb-8" aria-label="Breadcrumb">
+        <ol class="inline-flex items-center space-x-1 md:space-x-3">
+            <li>
+                <a href="{% url 'shop:home' %}" class="text-gray-500 hover:text-primary-600 transition-colors">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path>
+                    </svg>
+                </a>
+            </li>
+            <li>
+                <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+                </svg>
+            </li>
+            <li><span class="text-gray-900 dark:text-white font-medium">Contact</span></li>
+        </ol>
+    </nav>
+
+    <!-- Header Section -->
+    <div class="text-center mb-16">
+        <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-primary-500 to-primary-600 rounded-2xl mb-6">
+            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
+        </div>
+        <h1 class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">Get in Touch</h1>
+        <p class="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
+            Have a question about our products or services? We're here to help! 
+            Fill out the form below and we'll get back to you as soon as possible.
+        </p>
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
         <!-- Contact Form -->
-        <div>
-            <div class="mb-8">
-                <h1 class="text-3xl font-bold mb-4">Get in Touch</h1>
-                <p class="text-gray-600 dark:text-gray-400 text-lg">
-                    Have a question about our products or services? We're here to help! 
-                    Fill out the form below and we'll get back to you as soon as possible.
-                </p>
-            </div>
+        <div class="order-2 lg:order-1">
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-soft border border-gray-200 dark:border-gray-700 p-8">
+                <div class="mb-8">
+                    <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4 flex items-center">
+                        <div class="w-8 h-8 bg-primary-100 dark:bg-primary-900/20 rounded-xl flex items-center justify-center mr-3">
+                            <svg class="w-5 h-5 text-primary-600 dark:text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                            </svg>
+                        </div>
+                        Send us a Message
+                    </h2>
+                    <p class="text-gray-600 dark:text-gray-400">
+                        We typically respond within 24 hours during business days.
+                    </p>
+                </div>
 
-            <form method="post" class="space-y-6">
-                {% csrf_token %}
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <label class="block text-sm font-medium mb-2" for="{{ form.name.id_for_label }}">{{ form.name.label }}</label>
-                        {{ form.name }}
-                        {% for error in form.name.errors %}<p class="text-sm text-red-600 mt-1">{{ error }}</p>{% endfor %}
+                <form method="post" class="space-y-6">
+                    {% csrf_token %}
+                    
+                    <!-- Name and Email Row -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2" for="{{ form.name.id_for_label }}">
+                                {{ form.name.label }}
+                                {% if form.name.field.required %}
+                                <span class="text-red-500 ml-1">*</span>
+                                {% endif %}
+                            </label>
+                            <input type="text" 
+                                   name="{{ form.name.name }}" 
+                                   id="{{ form.name.id_for_label }}"
+                                   value="{{ form.name.value|default:'' }}"
+                                   placeholder="Your full name"
+                                   class="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:text-white transition-all duration-200 placeholder-gray-400 dark:placeholder-gray-500"
+                                   {% if form.name.field.required %}required{% endif %}>
+                            {% for error in form.name.errors %}
+                            <p class="text-sm text-red-600 dark:text-red-400 mt-2 flex items-center">
+                                <svg class="w-4 h-4 mr-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                {{ error }}
+                            </p>
+                            {% endfor %}
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2" for="{{ form.email.id_for_label }}">
+                                {{ form.email.label }}
+                                {% if form.email.field.required %}
+                                <span class="text-red-500 ml-1">*</span>
+                                {% endif %}
+                            </label>
+                            <input type="email" 
+                                   name="{{ form.email.name }}" 
+                                   id="{{ form.email.id_for_label }}"
+                                   value="{{ form.email.value|default:'' }}"
+                                   placeholder="your.email@example.com"
+                                   class="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:text-white transition-all duration-200 placeholder-gray-400 dark:placeholder-gray-500"
+                                   {% if form.email.field.required %}required{% endif %}>
+                            {% for error in form.email.errors %}
+                            <p class="text-sm text-red-600 dark:text-red-400 mt-2 flex items-center">
+                                <svg class="w-4 h-4 mr-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                {{ error }}
+                            </p>
+                            {% endfor %}
+                        </div>
                     </div>
-                    <div>
-                        <label class="block text-sm font-medium mb-2" for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
-                        {{ form.email }}
-                        {% for error in form.email.errors %}<p class="text-sm text-red-600 mt-1">{{ error }}</p>{% endfor %}
+                    
+                    <!-- Phone and Subject Row -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2" for="{{ form.phone.id_for_label }}">
+                                {{ form.phone.label }}
+                            </label>
+                            <input type="tel" 
+                                   name="{{ form.phone.name }}" 
+                                   id="{{ form.phone.id_for_label }}"
+                                   value="{{ form.phone.value|default:'' }}"
+                                   placeholder="+32 XXX XX XX XX"
+                                   class="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:text-white transition-all duration-200 placeholder-gray-400 dark:placeholder-gray-500">
+                            {% for error in form.phone.errors %}
+                            <p class="text-sm text-red-600 dark:text-red-400 mt-2 flex items-center">
+                                <svg class="w-4 h-4 mr-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                {{ error }}
+                            </p>
+                            {% endfor %}
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2" for="{{ form.subject.id_for_label }}">
+                                {{ form.subject.label }}
+                                {% if form.subject.field.required %}
+                                <span class="text-red-500 ml-1">*</span>
+                                {% endif %}
+                            </label>
+                            <select name="{{ form.subject.name }}" 
+                                    id="{{ form.subject.id_for_label }}"
+                                    class="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:text-white transition-all duration-200 appearance-none bg-no-repeat bg-right pr-10"
+                                    style="background-image: url('data:image/svg+xml,%3csvg xmlns=\'http://www.w3.org/2000/svg\' fill=\'none\' viewBox=\'0 0 20 20\'%3e%3cpath stroke=\'%236b7280\' stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'1.5\' d=\'m6 8 4 4 4-4\'/%3e%3c/svg%3e')"
+                                    {% if form.subject.field.required %}required{% endif %}>
+                                <option value="">Select a topic</option>
+                                <option value="general" {% if form.subject.value == 'general' %}selected{% endif %}>General Inquiry</option>
+                                <option value="product" {% if form.subject.value == 'product' %}selected{% endif %}>Product Question</option>
+                                <option value="order" {% if form.subject.value == 'order' %}selected{% endif %}>Order Support</option>
+                                <option value="service" {% if form.subject.value == 'service' %}selected{% endif %}>Service Request</option>
+                                <option value="technical" {% if form.subject.value == 'technical' %}selected{% endif %}>Technical Support</option>
+                                <option value="other" {% if form.subject.value == 'other' %}selected{% endif %}>Other</option>
+                            </select>
+                            {% for error in form.subject.errors %}
+                            <p class="text-sm text-red-600 dark:text-red-400 mt-2 flex items-center">
+                                <svg class="w-4 h-4 mr-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                {{ error }}
+                            </p>
+                            {% endfor %}
+                        </div>
                     </div>
-                </div>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    
+                    <!-- Order Number (Optional) -->
                     <div>
-                        <label class="block text-sm font-medium mb-2" for="{{ form.phone.id_for_label }}">{{ form.phone.label }}</label>
-                        {{ form.phone }}
-                        {% for error in form.phone.errors %}<p class="text-sm text-red-600 mt-1">{{ error }}</p>{% endfor %}
+                        <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2" for="{{ form.order_number.id_for_label }}">
+                            {{ form.order_number.label }}
+                        </label>
+                        <input type="text" 
+                               name="{{ form.order_number.name }}" 
+                               id="{{ form.order_number.id_for_label }}"
+                               value="{{ form.order_number.value|default:'' }}"
+                               placeholder="e.g., AJO-2025-001234"
+                               class="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:text-white transition-all duration-200 placeholder-gray-400 dark:placeholder-gray-500">
+                        <p class="text-sm text-gray-600 dark:text-gray-400 mt-2 flex items-center">
+                            <svg class="w-4 h-4 mr-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            Optional - Include if your inquiry is about a specific order
+                        </p>
+                        {% for error in form.order_number.errors %}
+                        <p class="text-sm text-red-600 dark:text-red-400 mt-2 flex items-center">
+                            <svg class="w-4 h-4 mr-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            {{ error }}
+                        </p>
+                        {% endfor %}
                     </div>
+                    
+                    <!-- Message -->
                     <div>
-                        <label class="block text-sm font-medium mb-2" for="{{ form.subject.id_for_label }}">{{ form.subject.label }}</label>
-                        {{ form.subject }}
-                        {% for error in form.subject.errors %}<p class="text-sm text-red-600 mt-1">{{ error }}</p>{% endfor %}
+                        <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2" for="{{ form.message.id_for_label }}">
+                            {{ form.message.label }}
+                            {% if form.message.field.required %}
+                            <span class="text-red-500 ml-1">*</span>
+                            {% endif %}
+                        </label>
+                        <textarea name="{{ form.message.name }}" 
+                                  id="{{ form.message.id_for_label }}"
+                                  rows="6"
+                                  placeholder="Please describe your question or concern in detail..."
+                                  class="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:text-white transition-all duration-200 placeholder-gray-400 dark:placeholder-gray-500 resize-none"
+                                  {% if form.message.field.required %}required{% endif %}>{{ form.message.value|default:'' }}</textarea>
+                        {% for error in form.message.errors %}
+                        <p class="text-sm text-red-600 dark:text-red-400 mt-2 flex items-center">
+                            <svg class="w-4 h-4 mr-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            {{ error }}
+                        </p>
+                        {% endfor %}
                     </div>
-                </div>
-                
-                <div>
-                    <label class="block text-sm font-medium mb-2" for="{{ form.order_number.id_for_label }}">{{ form.order_number.label }}</label>
-                    {{ form.order_number }}
-                    {% for error in form.order_number.errors %}<p class="text-sm text-red-600 mt-1">{{ error }}</p>{% endfor %}
-                </div>
-                
-                <div>
-                    <label class="block text-sm font-medium mb-2" for="{{ form.message.id_for_label }}">{{ form.message.label }}</label>
-                    {{ form.message }}
-                    {% for error in form.message.errors %}<p class="text-sm text-red-600 mt-1">{{ error }}</p>{% endfor %}
-                </div>
-                
-                <button type="submit" class="btn btn-primary btn-lg w-full">
-                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" /></svg>
-                    Send Message
-                </button>
-            </form>
+                    
+                    <!-- Submit Button -->
+                    <button type="submit" 
+                            class="w-full inline-flex items-center justify-center px-8 py-4 bg-primary-600 text-white rounded-xl font-semibold hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition-all duration-200 shadow-soft hover:shadow-medium group">
+                        <svg class="w-5 h-5 mr-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                        </svg>
+                        Send Message
+                    </button>
+                </form>
+            </div>
         </div>
         
         <!-- Contact Information -->
-        <div class="space-y-8">
-            <div class="bg-gradient-to-br from-green-600 to-blue-600 rounded-xl p-8 text-white">
-                <h2 class="text-2xl font-bold mb-6">{{ COMPANY_NAME }}</h2>
-                <div class="space-y-4">
-                    <div class="flex items-start">
-                        <svg class="w-6 h-6 mr-4 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+        <div class="order-1 lg:order-2 space-y-8">
+            <!-- Contact Cards -->
+            <div class="bg-gradient-to-br from-primary-600 to-primary-700 rounded-2xl p-8 text-white shadow-strong">
+                <h2 class="text-2xl font-bold mb-6 flex items-center">
+                    <div class="w-8 h-8 bg-white/20 rounded-xl flex items-center justify-center mr-3">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-2m-2 0H7m14 0V9a2 2 0 00-2-2M9 7h6m-6 4h6m-6 4h6m-6 4h6" />
+                        </svg>
+                    </div>
+                    {{ COMPANY_NAME|default:"Alamana-jo" }}
+                </h2>
+                <div class="space-y-6">
+                    <!-- Address -->
+                    <div class="flex items-start group">
+                        <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center mr-4 group-hover:bg-white/30 transition-colors">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
+                        </div>
                         <div>
-                            <h3 class="font-semibold mb-1">Address</h3>
-                            <p class="text-green-100">{{ COMPANY_ADDRESS|linebreaksbr }}</p>
+                            <h3 class="font-semibold text-lg mb-2">Visit Our Store</h3>
+                            <p class="text-primary-100 leading-relaxed">
+                                {{ COMPANY_ADDRESS|default:"Quellinstraat 45<br>2018 Antwerpen, Belgium"|safe }}
+                            </p>
+                            <a href="{{ shop_settings.google_maps_url|default:'https://maps.google.com/?q=Quellinstraat+45,+2018+Antwerpen,+Belgium' }}" 
+                               target="_blank" 
+                               rel="noopener noreferrer"
+                               class="inline-flex items-center mt-2 text-sm text-primary-100 hover:text-white transition-colors">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                </svg>
+                                View on Google Maps
+                            </a>
                         </div>
                     </div>
-                    <div class="flex items-start">
-                        <svg class="w-6 h-6 mr-4 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" /></svg>
+                    
+                    <!-- Phone -->
+                    <div class="flex items-center group">
+                        <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center mr-4 group-hover:bg-white/30 transition-colors">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                            </svg>
+                        </div>
                         <div>
-                            <h3 class="font-semibold mb-1">Phone</h3>
-                            <a href="tel:{{ COMPANY_PHONE }}" class="text-green-100 hover:text-white">{{ COMPANY_PHONE }}</a>
+                            <h3 class="font-semibold text-lg mb-1">Call Us</h3>
+                            <a href="tel:{{ COMPANY_PHONE|default:'+32499890237' }}" 
+                               class="text-primary-100 hover:text-white transition-colors text-lg">
+                                {{ COMPANY_PHONE|default:"+32 499 89 02 37" }}
+                            </a>
                         </div>
                     </div>
-                    <div class="flex items-start">
-                        <svg class="w-6 h-6 mr-4 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+                    
+                    <!-- Email -->
+                    <div class="flex items-center group">
+                        <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center mr-4 group-hover:bg-white/30 transition-colors">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                            </svg>
+                        </div>
                         <div>
-                            <h3 class="font-semibold mb-1">Email</h3>
-                            <a href="mailto:{{ COMPANY_EMAIL }}" class="text-green-100 hover:text-white">{{ COMPANY_EMAIL }}</a>
+                            <h3 class="font-semibold text-lg mb-1">Email Us</h3>
+                            <a href="mailto:{{ COMPANY_EMAIL|default:'alamanajo@gmail.com' }}" 
+                               class="text-primary-100 hover:text-white transition-colors">
+                                {{ COMPANY_EMAIL|default:"alamanajo@gmail.com" }}
+                            </a>
                         </div>
                     </div>
                 </div>
             </div>
             
-            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-                <h3 class="text-lg font-bold mb-4">Business Hours</h3>
-                <div class="space-y-2 text-sm">
+            <!-- Business Hours -->
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-soft border border-gray-200 dark:border-gray-700 p-8">
+                <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
+                    <div class="w-8 h-8 bg-green-100 dark:bg-green-900/20 rounded-xl flex items-center justify-center mr-3">
+                        <svg class="w-5 h-5 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                    Business Hours
+                </h3>
+                <div class="space-y-3">
                     {% if business_hours %}
                         {% for hour in business_hours %}
-                        <div class="flex justify-between">
-                            <span>{{ hour.get_weekday_display }}</span>
+                        <div class="flex justify-between items-center py-2 border-b border-gray-100 dark:border-gray-700 last:border-b-0">
+                            <span class="text-gray-700 dark:text-gray-300 font-medium">{{ hour.get_weekday_display }}</span>
                             {% if hour.is_closed %}
-                                <span class="font-medium text-red-500">Closed</span>
+                                <span class="text-red-500 font-medium">Closed</span>
                             {% else %}
-                                <span class="font-medium text-gray-700 dark:text-gray-300">{{ hour.open_time|time:"g:i A" }} - {{ hour.close_time|time:"g:i A" }}</span>
+                                <span class="text-gray-900 dark:text-white font-medium">{{ hour.open_time|time:"H:i" }} - {{ hour.close_time|time:"H:i" }}</span>
                             {% endif %}
                         </div>
                         {% endfor %}
                     {% else %}
-                        <p>Business hours not available.</p>
+                        <p class="text-gray-600 dark:text-gray-400">Business hours not available. Please contact us for current hours.</p>
                     {% endif %}
+                </div>
+            </div>
+            
+            <!-- Response Time -->
+            <div class="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 rounded-2xl p-6 border border-green-200 dark:border-green-800">
+                <div class="flex items-start">
+                    <div class="w-10 h-10 bg-green-500 rounded-xl flex items-center justify-center mr-4 flex-shrink-0">
+                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-green-800 dark:text-green-200 mb-2">Quick Response</h4>
+                        <p class="text-green-700 dark:text-green-300 text-sm">
+                            We typically respond to messages within 2-4 hours during business days. 
+                            For urgent matters, please call us directly.
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+// Enhanced form handling
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('form[method="post"]');
+    const inputs = form.querySelectorAll('input, select, textarea');
+    
+    // Add real-time validation
+    inputs.forEach(input => {
+        input.addEventListener('blur', function() {
+            validateField(this);
+        });
+        
+        input.addEventListener('input', function() {
+            clearFieldError(this);
+        });
+    });
+    
+    function validateField(field) {
+        const isValid = field.checkValidity();
+        
+        // Remove existing validation classes
+        field.classList.remove('border-red-500', 'border-green-500');
+        
+        if (field.value.trim() !== '') {
+            if (isValid) {
+                field.classList.add('border-green-500');
+            } else {
+                field.classList.add('border-red-500');
+            }
+        }
+    }
+    
+    function clearFieldError(field) {
+        field.classList.remove('border-red-500');
+    }
+    
+    // Auto-fill from URL parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const subject = urlParams.get('subject');
+    const orderNumber = urlParams.get('order_number');
+    
+    if (subject) {
+        const subjectField = document.getElementById('id_subject');
+        if (subjectField) {
+            subjectField.value = subject;
+        }
+    }
+    
+    if (orderNumber) {
+        const orderField = document.getElementById('id_order_number');
+        if (orderField) {
+            orderField.value = orderNumber;
+        }
+    }
+});
+</script>
 {% endblock content %}

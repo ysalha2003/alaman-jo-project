@@ -1,67 +1,222 @@
 {% extends 'base/base.html' %}
-{% block title %}Profile - {{ user.username }}{% endblock title %}
+{% load static %}
+
+{% block title %}Profile - {{ user.first_name|default:user.username }} - Alamana-jo{% endblock title %}
 
 {% block content %}
-<div class="max-w-4xl mx-auto">
-    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-8">
-        <div class="flex flex-col lg:flex-row gap-8">
-            <!-- Profile Picture Section -->
-            <div class="flex-shrink-0 text-center">
-                <div class="w-32 h-32 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 text-white flex items-center justify-center text-4xl font-bold mx-auto">
-                    {% if user.profile_picture %}
-                        <img src="{{ user.profile_picture.url }}" alt="{{ user.username }}'s profile" class="w-32 h-32 rounded-full" />
-                    {% else %}
-                        {{ user.username.0|upper }}
-                    {% endif %}
+<div class="max-w-6xl mx-auto px-4 py-8">
+    <!-- Breadcrumb -->
+    <nav class="flex mb-8" aria-label="Breadcrumb">
+        <ol class="inline-flex items-center space-x-1 md:space-x-3">
+            <li>
+                <a href="{% url 'shop:home' %}" class="text-gray-500 hover:text-primary-600 transition-colors">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path>
+                    </svg>
+                </a>
+            </li>
+            <li>
+                <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+                </svg>
+            </li>
+            <li><span class="text-gray-900 dark:text-white font-medium">My Profile</span></li>
+        </ol>
+    </nav>
+
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+        <!-- Profile Card -->
+        <div class="lg:col-span-1">
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-soft border border-gray-200 dark:border-gray-700 p-6 sticky top-24">
+                <!-- Profile Picture -->
+                <div class="text-center mb-6">
+                    <div class="relative inline-block">
+                        {% if user.profile_picture %}
+                        <img src="{{ user.profile_picture.url }}" 
+                             alt="{{ user.username }}'s profile" 
+                             class="w-24 h-24 rounded-full object-cover border-4 border-white dark:border-gray-700 shadow-soft">
+                        {% else %}
+                        <div class="w-24 h-24 rounded-full bg-gradient-to-br from-primary-500 to-primary-600 text-white flex items-center justify-center text-2xl font-bold border-4 border-white dark:border-gray-700 shadow-soft">
+                            {{ user.first_name.0|default:user.username.0|upper }}
+                        </div>
+                        {% endif %}
+                        <div class="absolute -bottom-2 -right-2 w-8 h-8 bg-green-500 border-4 border-white dark:border-gray-700 rounded-full flex items-center justify-center">
+                            <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                            </svg>
+                        </div>
+                    </div>
+                    <h1 class="text-xl font-bold text-gray-900 dark:text-white mt-4">{{ user.first_name|default:user.username }}</h1>
+                    <p class="text-gray-500 dark:text-gray-400">{{ user.email }}</p>
+                    <div class="mt-4">
+                        <a href="{% url 'accounts:profile_edit' %}" 
+                           class="inline-flex items-center px-4 py-2 bg-primary-600 text-white rounded-xl text-sm font-medium hover:bg-primary-700 transition-colors shadow-soft">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                            </svg>
+                            Edit Profile
+                        </a>
+                    </div>
                 </div>
-                <div class="mt-4">
-                    <a href="{% url 'accounts:profile_edit' %}" class="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors">Edit Profile</a>
+                
+                <!-- Quick Stats -->
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-xl">
+                        <div class="flex items-center">
+                            <div class="w-8 h-8 bg-blue-100 dark:bg-blue-900/20 rounded-lg flex items-center justify-center mr-3">
+                                <svg class="w-4 h-4 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                                </svg>
+                            </div>
+                            <span class="text-sm text-gray-600 dark:text-gray-400">Orders</span>
+                        </div>
+                        <span class="font-bold text-gray-900 dark:text-white">{{ user.orders.count }}</span>
+                    </div>
+                    
+                    <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-xl">
+                        <div class="flex items-center">
+                            <div class="w-8 h-8 bg-red-100 dark:bg-red-900/20 rounded-lg flex items-center justify-center mr-3">
+                                <svg class="w-4 h-4 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                                </svg>
+                            </div>
+                            <span class="text-sm text-gray-600 dark:text-gray-400">Wishlist</span>
+                        </div>
+                        <span class="font-bold text-gray-900 dark:text-white">{{ user.wishlist_items.count }}</span>
+                    </div>
+                    
+                    <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-xl">
+                        <div class="flex items-center">
+                            <div class="w-8 h-8 bg-purple-100 dark:bg-purple-900/20 rounded-lg flex items-center justify-center mr-3">
+                                <svg class="w-4 h-4 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4" />
+                                </svg>
+                            </div>
+                            <span class="text-sm text-gray-600 dark:text-gray-400">Service Quotes</span>
+                        </div>
+                        <span class="font-bold text-gray-900 dark:text-white">{{ user.maintenance_quotes.count }}</span>
+                    </div>
                 </div>
             </div>
-            
+        </div>
+        
+        <!-- Main Content -->
+        <div class="lg:col-span-3 space-y-8">
             <!-- Profile Information -->
-            <div class="flex-grow">
-                <h1 class="text-3xl font-bold mb-6">{{ user.username }}</h1>
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-soft border border-gray-200 dark:border-gray-700 p-8">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-2xl font-bold text-gray-900 dark:text-white flex items-center">
+                        <div class="w-8 h-8 bg-primary-100 dark:bg-primary-900/20 rounded-xl flex items-center justify-center mr-3">
+                            <svg class="w-5 h-5 text-primary-600 dark:text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                            </svg>
+                        </div>
+                        Profile Information
+                    </h2>
+                    <a href="{% url 'accounts:profile_edit' %}" 
+                       class="inline-flex items-center px-4 py-2 text-primary-600 dark:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-900/20 rounded-xl transition-colors font-medium">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                        </svg>
+                        Edit
+                    </a>
+                </div>
                 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                    {% if user.full_name %}
-                    <div>
-                        <h3 class="font-medium text-gray-600 dark:text-gray-400 mb-1">Full Name</h3>
-                        <p>{{ user.full_name }}</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-6">
+                        {% if user.first_name or user.last_name %}
+                        <div>
+                            <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Full Name</h3>
+                            <p class="text-gray-900 dark:text-white font-medium">{{ user.first_name }} {{ user.last_name }}</p>
+                        </div>
+                        {% endif %}
+                        
+                        <div>
+                            <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Email Address</h3>
+                            <p class="text-gray-900 dark:text-white font-medium">{{ user.email }}</p>
+                        </div>
+                        
+                        <div>
+                            <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Username</h3>
+                            <p class="text-gray-900 dark:text-white font-medium">{{ user.username }}</p>
+                        </div>
                     </div>
-                    {% endif %}
                     
-                    <div>
-                        <h3 class="font-medium text-gray-600 dark:text-gray-400 mb-1">Email</h3>
-                        <p>{{ user.email }}</p>
-                    </div>
-                    
-                    {% if user.location %}
-                    <div>
-                        <h3 class="font-medium text-gray-600 dark:text-gray-400 mb-1">Location</h3>
-                        <p>{{ user.location }}</p>
-                    </div>
-                    {% endif %}
-                    
-                    {% if user.website %}
-                    <div>
-                        <h3 class="font-medium text-gray-600 dark:text-gray-400 mb-1">Website</h3>
-                        <p><a href="{{ user.website }}" class="text-blue-600 hover:text-blue-700" target="_blank">{{ user.website }}</a></p>
-                    </div>
-                    {% endif %}
-                    
-                    <div>
-                        <h3 class="font-medium text-gray-600 dark:text-gray-400 mb-1">Member Since</h3>
-                        <p>{{ user.date_joined|date:"F Y" }}</p>
+                    <div class="space-y-6">
+                        <div>
+                            <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Member Since</h3>
+                            <p class="text-gray-900 dark:text-white font-medium">{{ user.date_joined|date:"F Y" }}</p>
+                        </div>
+                        
+                        <div>
+                            <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Account Status</h3>
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400">
+                                <span class="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
+                                Active
+                            </span>
+                        </div>
+                        
+                        <div>
+                            <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Last Login</h3>
+                            <p class="text-gray-900 dark:text-white font-medium">{{ user.last_login|date:"M d, Y g:i A"|default:"Never" }}</p>
+                        </div>
                     </div>
                 </div>
                 
                 {% if user.bio %}
-                <div>
-                    <h3 class="font-medium text-gray-600 dark:text-gray-400 mb-2">Bio</h3>
-                    <p class="text-gray-700 dark:text-gray-300">{{ user.bio }}</p>
+                <div class="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
+                    <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Bio</h3>
+                    <p class="text-gray-900 dark:text-white">{{ user.bio }}</p>
                 </div>
                 {% endif %}
+            </div>
+            
+            <!-- Quick Actions -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <a href="{% url 'shop:order_history' %}" 
+                   class="group bg-white dark:bg-gray-800 rounded-2xl shadow-soft border border-gray-200 dark:border-gray-700 p-6 hover:shadow-medium transition-all duration-200 hover:-translate-y-1">
+                    <div class="flex items-center">
+                        <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900/20 rounded-xl flex items-center justify-center mr-4 group-hover:scale-110 transition-transform">
+                            <svg class="w-6 h-6 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-gray-900 dark:text-white">My Orders</h3>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">View order history</p>
+                        </div>
+                    </div>
+                </a>
+                
+                <a href="{% url 'shop:wishlist' %}" 
+                   class="group bg-white dark:bg-gray-800 rounded-2xl shadow-soft border border-gray-200 dark:border-gray-700 p-6 hover:shadow-medium transition-all duration-200 hover:-translate-y-1">
+                    <div class="flex items-center">
+                        <div class="w-12 h-12 bg-red-100 dark:bg-red-900/20 rounded-xl flex items-center justify-center mr-4 group-hover:scale-110 transition-transform">
+                            <svg class="w-6 h-6 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-gray-900 dark:text-white">Wishlist</h3>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">Saved items</p>
+                        </div>
+                    </div>
+                </a>
+                
+                <a href="{% url 'shop:maintenance_quotes_list' %}" 
+                   class="group bg-white dark:bg-gray-800 rounded-2xl shadow-soft border border-gray-200 dark:border-gray-700 p-6 hover:shadow-medium transition-all duration-200 hover:-translate-y-1">
+                    <div class="flex items-center">
+                        <div class="w-12 h-12 bg-purple-100 dark:bg-purple-900/20 rounded-xl flex items-center justify-center mr-4 group-hover:scale-110 transition-transform">
+                            <svg class="w-6 h-6 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4" />
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-gray-900 dark:text-white">Service Quotes</h3>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">Maintenance requests</p>
+                        </div>
+                    </div>
+                </a>
             </div>
         </div>
     </div>

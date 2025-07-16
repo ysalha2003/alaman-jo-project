@@ -763,6 +763,8 @@ class MaintenanceQuote(models.Model):
     @property
     def days_since_created(self):
         from django.utils import timezone
+        if self.created_at is None:
+            return 0
         return (timezone.now() - self.created_at).days
 
 
@@ -940,12 +942,7 @@ class ShopSetting(models.Model):
 
     def save(self, *args, **kwargs):
         self.pk = 1  # Singleton
-        is_new = self._state.adding
         super().save(*args, **kwargs)
-        if is_new:
-            # Create business hours for each day
-            for i, day in BusinessHour.WEEKDAYS:
-                BusinessHour.objects.create(setting=self, weekday=i)
 
     def delete(self, *args, **kwargs):
         pass  # Prevent deletion
@@ -953,6 +950,10 @@ class ShopSetting(models.Model):
     @classmethod
     def load(cls):
         obj, created = cls.objects.get_or_create(pk=1)
+        # Ensure business hours exist, especially if the object was created previously
+        if obj.business_hours.count() == 0:
+            for i, day in BusinessHour.WEEKDAYS:
+                BusinessHour.objects.get_or_create(setting=obj, weekday=i)
         return obj
 
     @property

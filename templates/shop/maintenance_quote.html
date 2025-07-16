@@ -4,107 +4,292 @@
 {% block title %}Request Maintenance Quote - Alamana-jo{% endblock title %}
 
 {% block content %}
-<div class="max-w-4xl mx-auto px-4 py-8">
+<div class="max-w-6xl mx-auto px-4 py-8">
     <!-- Breadcrumb -->
-    <div class="breadcrumbs text-sm mb-8">
-        <ul>
-            <li><a href="{% url 'shop:home' %}">Home</a></li>
-            <li><a href="{% url 'accounts:profile' %}">Profile</a></li>
-            <li>Maintenance Quote</li>
-        </ul>
+    <nav class="flex mb-8" aria-label="Breadcrumb">
+        <ol class="inline-flex items-center space-x-1 md:space-x-3">
+            <li>
+                <a href="{% url 'shop:home' %}" class="text-gray-500 hover:text-primary-600 transition-colors">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path>
+                    </svg>
+                </a>
+            </li>
+            <li>
+                <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+                </svg>
+            </li>
+            <li><a href="{% url 'accounts:profile' %}" class="text-gray-500 hover:text-primary-600 transition-colors">Profile</a></li>
+            <li>
+                <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+                </svg>
+            </li>
+            <li><span class="text-gray-900 dark:text-white font-medium">Maintenance Quote</span></li>
+        </ol>
+    </nav>
+
+    <!-- Header Section -->
+    <div class="text-center mb-12">
+        <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl mb-6">
+            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4" />
+            </svg>
+        </div>
+        <h1 class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">Request Maintenance Quote</h1>
+        <p class="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
+            Need professional maintenance for your bike, e-bike, or e-scooter? Fill out this form and our expert technicians will provide you with a detailed quote.
+        </p>
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <!-- Form -->
         <div class="lg:col-span-2">
-            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-8">
-                <div class="mb-8">
-                    <h1 class="text-3xl font-bold mb-4">Request Maintenance Quote</h1>
-                    <p class="text-gray-600 dark:text-gray-400">
-                        Need professional maintenance for your bike, e-bike, or e-scooter? Fill out this form and our expert technicians will provide you with a detailed quote.
-                    </p>
-                </div>
-
-                <form method="post" enctype="multipart/form-data" class="space-y-6">
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-soft border border-gray-200 dark:border-gray-700 overflow-hidden">
+                <form method="post" enctype="multipart/form-data" class="space-y-8">
                     {% csrf_token %}
                     
                     <!-- Customer Information -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
-                        <div class="md:col-span-2">
-                            <h3 class="text-lg font-semibold mb-2 text-green-600">1. Customer Information</h3>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium mb-2" for="{{ form.full_name.id_for_label }}">{{ form.full_name.label }}</label>
-                            {{ form.full_name }}
-                            {% for error in form.full_name.errors %}<p class="text-sm text-red-600 mt-1">{{ error }}</p>{% endfor %}
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium mb-2" for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
-                            {{ form.email }}
-                            {% for error in form.email.errors %}<p class="text-sm text-red-600 mt-1">{{ error }}</p>{% endfor %}
-                        </div>
-                        <div class="md:col-span-2">
-                            <label class="block text-sm font-medium mb-2" for="{{ form.phone.id_for_label }}">{{ form.phone.label }}</label>
-                            {{ form.phone }}
-                            {% for error in form.phone.errors %}<p class="text-sm text-red-600 mt-1">{{ error }}</p>{% endfor %}
-                        </div>
-                    </div>
-                    
-                    <!-- Vehicle Information -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
-                        <div class="md:col-span-2">
-                            <h3 class="text-lg font-semibold mb-2 text-blue-600">2. Vehicle Information</h3>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium mb-2" for="{{ form.vehicle_type.id_for_label }}">{{ form.vehicle_type.label }}</label>
-                            {{ form.vehicle_type }}
-                            {% for error in form.vehicle_type.errors %}<p class="text-sm text-red-600 mt-1">{{ error }}</p>{% endfor %}
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium mb-2" for="{{ form.vehicle_brand.id_for_label }}">{{ form.vehicle_brand.label }}</label>
-                            {{ form.vehicle_brand }}
-                            {% for error in form.vehicle_brand.errors %}<p class="text-sm text-red-600 mt-1">{{ error }}</p>{% endfor %}
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium mb-2" for="{{ form.vehicle_model.id_for_label }}">{{ form.vehicle_model.label }}</label>
-                            {{ form.vehicle_model }}
-                            {% for error in form.vehicle_model.errors %}<p class="text-sm text-red-600 mt-1">{{ error }}</p>{% endfor %}
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium mb-2" for="{{ form.purchase_year.id_for_label }}">{{ form.purchase_year.label }}</label>
-                            {{ form.purchase_year }}
-                            {% for error in form.purchase_year.errors %}<p class="text-sm text-red-600 mt-1">{{ error }}</p>{% endfor %}
-                        </div>
-                    </div>
-                    
-                    <!-- Service Request -->
-                    <div class="p-4 border border-gray-200 dark:border-gray-700 rounded-lg space-y-6">
-                        <h3 class="text-lg font-semibold text-purple-600">3. Service Request Details</h3>
-                        <div>
-                            <label class="block text-sm font-medium mb-2" for="{{ form.problem_description.id_for_label }}">{{ form.problem_description.label }}</label>
-                            {{ form.problem_description }}
-                            {% for error in form.problem_description.errors %}<p class="text-sm text-red-600 mt-1">{{ error }}</p>{% endfor %}
-                        </div>
+                    <div class="p-8 border-b border-gray-200 dark:border-gray-700">
+                        <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
+                            <div class="w-8 h-8 bg-green-100 dark:bg-green-900/20 rounded-xl flex items-center justify-center mr-3">
+                                <span class="text-green-600 dark:text-green-400 font-bold">1</span>
+                            </div>
+                            Customer Information
+                        </h2>
                         
-                        <!-- Photo Uploads Section -->
-                        <div>
-                            <label class="block text-sm font-medium mb-2">Upload Photos of the Issue (Optional)</label>
-                            <p class="text-xs text-gray-500 mb-4">A picture is worth a thousand words. Show us the problem.</p>
-                            <input type="file" name="photos" multiple accept="image/*" class="file-input file-input-bordered w-full">
-                        </div>
-
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
-                                <label class="block text-sm font-medium mb-2" for="{{ form.urgency.id_for_label }}">{{ form.urgency.label }}</label>
-                                {{ form.urgency }}
-                                {% for error in form.urgency.errors %}<p class="text-sm text-red-600 mt-1">{{ error }}</p>{% endfor %}
+                                <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2" for="{{ form.full_name.id_for_label }}">
+                                    {{ form.full_name.label }}
+                                    {% if form.full_name.field.required %}
+                                    <span class="text-red-500 ml-1">*</span>
+                                    {% endif %}
+                                </label>
+                                <input type="text" 
+                                       name="{{ form.full_name.name }}" 
+                                       id="{{ form.full_name.id_for_label }}"
+                                       value="{{ form.full_name.value|default:'' }}"
+                                       placeholder="Your full name"
+                                       class="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:text-white transition-all duration-200 placeholder-gray-400 dark:placeholder-gray-500"
+                                       {% if form.full_name.field.required %}required{% endif %}>
+                                {% for error in form.full_name.errors %}
+                                <p class="text-sm text-red-600 dark:text-red-400 mt-2">{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2" for="{{ form.email.id_for_label }}">
+                                    {{ form.email.label }}
+                                    {% if form.email.field.required %}
+                                    <span class="text-red-500 ml-1">*</span>
+                                    {% endif %}
+                                </label>
+                                <input type="email" 
+                                       name="{{ form.email.name }}" 
+                                       id="{{ form.email.id_for_label }}"
+                                       value="{{ form.email.value|default:'' }}"
+                                       placeholder="your.email@example.com"
+                                       class="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:text-white transition-all duration-200 placeholder-gray-400 dark:placeholder-gray-500"
+                                       {% if form.email.field.required %}required{% endif %}>
+                                {% for error in form.email.errors %}
+                                <p class="text-sm text-red-600 dark:text-red-400 mt-2">{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                            
+                            <div class="md:col-span-2">
+                                <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2" for="{{ form.phone.id_for_label }}">
+                                    {{ form.phone.label }}
+                                    {% if form.phone.field.required %}
+                                    <span class="text-red-500 ml-1">*</span>
+                                    {% endif %}
+                                </label>
+                                <input type="tel" 
+                                       name="{{ form.phone.name }}" 
+                                       id="{{ form.phone.id_for_label }}"
+                                       value="{{ form.phone.value|default:'' }}"
+                                       placeholder="+32 XXX XX XX XX"
+                                       class="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:text-white transition-all duration-200 placeholder-gray-400 dark:placeholder-gray-500"
+                                       {% if form.phone.field.required %}required{% endif %}>
+                                {% for error in form.phone.errors %}
+                                <p class="text-sm text-red-600 dark:text-red-400 mt-2">{{ error }}</p>
+                                {% endfor %}
                             </div>
                         </div>
                     </div>
                     
-                    <div class="pt-6 border-t border-gray-200 dark:border-gray-700">
-                        <button type="submit" class="btn btn-primary btn-lg w-full">
-                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <!-- Vehicle Information -->
+                    <div class="p-8 border-b border-gray-200 dark:border-gray-700">
+                        <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
+                            <div class="w-8 h-8 bg-blue-100 dark:bg-blue-900/20 rounded-xl flex items-center justify-center mr-3">
+                                <span class="text-blue-600 dark:text-blue-400 font-bold">2</span>
+                            </div>
+                            Vehicle Information
+                        </h2>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2" for="{{ form.vehicle_type.id_for_label }}">
+                                    {{ form.vehicle_type.label }}
+                                    {% if form.vehicle_type.field.required %}
+                                    <span class="text-red-500 ml-1">*</span>
+                                    {% endif %}
+                                </label>
+                                <select name="{{ form.vehicle_type.name }}" 
+                                        id="{{ form.vehicle_type.id_for_label }}"
+                                        class="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:text-white transition-all duration-200 appearance-none bg-no-repeat bg-right pr-10"
+                                        style="background-image: url('data:image/svg+xml,%3csvg xmlns=\'http://www.w3.org/2000/svg\' fill=\'none\' viewBox=\'0 0 20 20\'%3e%3cpath stroke=\'%236b7280\' stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'1.5\' d=\'m6 8 4 4 4-4\'/%3e%3c/svg%3e')"
+                                        {% if form.vehicle_type.field.required %}required{% endif %}>
+                                    <option value="">Select vehicle type</option>
+                                    <option value="bike" {% if form.vehicle_type.value == 'bike' %}selected{% endif %}>🚲 Regular Bike</option>
+                                    <option value="e_bike" {% if form.vehicle_type.value == 'e_bike' %}selected{% endif %}>⚡ E-Bike</option>
+                                    <option value="e_scooter" {% if form.vehicle_type.value == 'e_scooter' %}selected{% endif %}>🛴 E-Scooter</option>
+                                </select>
+                                {% for error in form.vehicle_type.errors %}
+                                <p class="text-sm text-red-600 dark:text-red-400 mt-2">{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2" for="{{ form.vehicle_brand.id_for_label }}">
+                                    {{ form.vehicle_brand.label }}
+                                    {% if form.vehicle_brand.field.required %}
+                                    <span class="text-red-500 ml-1">*</span>
+                                    {% endif %}
+                                </label>
+                                <input type="text" 
+                                       name="{{ form.vehicle_brand.name }}" 
+                                       id="{{ form.vehicle_brand.id_for_label }}"
+                                       value="{{ form.vehicle_brand.value|default:'' }}"
+                                       placeholder="e.g., Giant, Trek, Xiaomi"
+                                       class="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:text-white transition-all duration-200 placeholder-gray-400 dark:placeholder-gray-500"
+                                       {% if form.vehicle_brand.field.required %}required{% endif %}>
+                                {% for error in form.vehicle_brand.errors %}
+                                <p class="text-sm text-red-600 dark:text-red-400 mt-2">{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2" for="{{ form.vehicle_model.id_for_label }}">
+                                    {{ form.vehicle_model.label }}
+                                </label>
+                                <input type="text" 
+                                       name="{{ form.vehicle_model.name }}" 
+                                       id="{{ form.vehicle_model.id_for_label }}"
+                                       value="{{ form.vehicle_model.value|default:'' }}"
+                                       placeholder="Model name or number"
+                                       class="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:text-white transition-all duration-200 placeholder-gray-400 dark:placeholder-gray-500">
+                                {% for error in form.vehicle_model.errors %}
+                                <p class="text-sm text-red-600 dark:text-red-400 mt-2">{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2" for="{{ form.purchase_year.id_for_label }}">
+                                    {{ form.purchase_year.label }}
+                                </label>
+                                <input type="number" 
+                                       name="{{ form.purchase_year.name }}" 
+                                       id="{{ form.purchase_year.id_for_label }}"
+                                       value="{{ form.purchase_year.value|default:'' }}"
+                                       placeholder="2024"
+                                       min="1990"
+                                       max="2025"
+                                       class="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:text-white transition-all duration-200 placeholder-gray-400 dark:placeholder-gray-500">
+                                {% for error in form.purchase_year.errors %}
+                                <p class="text-sm text-red-600 dark:text-red-400 mt-2">{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Service Request -->
+                    <div class="p-8">
+                        <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
+                            <div class="w-8 h-8 bg-purple-100 dark:bg-purple-900/20 rounded-xl flex items-center justify-center mr-3">
+                                <span class="text-purple-600 dark:text-purple-400 font-bold">3</span>
+                            </div>
+                            Service Request Details
+                        </h2>
+                        
+                        <div class="space-y-6">
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2" for="{{ form.problem_description.id_for_label }}">
+                                    {{ form.problem_description.label }}
+                                    {% if form.problem_description.field.required %}
+                                    <span class="text-red-500 ml-1">*</span>
+                                    {% endif %}
+                                </label>
+                                <textarea name="{{ form.problem_description.name }}" 
+                                          id="{{ form.problem_description.id_for_label }}"
+                                          rows="6"
+                                          placeholder="Please describe the problem in detail. Include any symptoms, when the issue started, and what you were doing when it occurred..."
+                                          class="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:text-white transition-all duration-200 placeholder-gray-400 dark:placeholder-gray-500 resize-none"
+                                          {% if form.problem_description.field.required %}required{% endif %}>{{ form.problem_description.value|default:'' }}</textarea>
+                                <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">
+                                    Be as detailed as possible to help our technicians provide an accurate quote.
+                                </p>
+                                {% for error in form.problem_description.errors %}
+                                <p class="text-sm text-red-600 dark:text-red-400 mt-2">{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                            
+                            <!-- Photo Uploads Section -->
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Upload Photos of the Issue</label>
+                                <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                                    A picture is worth a thousand words. Show us the problem to help us provide a more accurate quote.
+                                </p>
+                                <div class="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl p-6 text-center hover:border-primary-400 transition-colors">
+                                    <input type="file" 
+                                           name="photos" 
+                                           multiple 
+                                           accept="image/*" 
+                                           class="hidden" 
+                                           id="photo-upload">
+                                    <label for="photo-upload" class="cursor-pointer">
+                                        <div class="w-12 h-12 bg-gray-100 dark:bg-gray-700 rounded-xl flex items-center justify-center mx-auto mb-4">
+                                            <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                            </svg>
+                                        </div>
+                                        <p class="text-gray-600 dark:text-gray-400 font-medium">Click to upload photos</p>
+                                        <p class="text-sm text-gray-500 dark:text-gray-500 mt-1">PNG, JPG, GIF up to 10MB each</p>
+                                    </label>
+                                </div>
+                                <div id="photo-preview" class="mt-4 grid grid-cols-2 md:grid-cols-4 gap-4 hidden"></div>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2" for="{{ form.urgency.id_for_label }}">
+                                    {{ form.urgency.label }}
+                                    {% if form.urgency.field.required %}
+                                    <span class="text-red-500 ml-1">*</span>
+                                    {% endif %}
+                                </label>
+                                <select name="{{ form.urgency.name }}" 
+                                        id="{{ form.urgency.id_for_label }}"
+                                        class="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:text-white transition-all duration-200 appearance-none bg-no-repeat bg-right pr-10"
+                                        style="background-image: url('data:image/svg+xml,%3csvg xmlns=\'http://www.w3.org/2000/svg\' fill=\'none\' viewBox=\'0 0 20 20\'%3e%3cpath stroke=\'%236b7280\' stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'1.5\' d=\'m6 8 4 4 4-4\'/%3e%3c/svg%3e')"
+                                        {% if form.urgency.field.required %}required{% endif %}>
+                                    <option value="">Select urgency level</option>
+                                    <option value="low" {% if form.urgency.value == 'low' %}selected{% endif %}>🟢 Low - Not urgent, can wait</option>
+                                    <option value="medium" {% if form.urgency.value == 'medium' %}selected{% endif %}>🟡 Medium - Within a week</option>
+                                    <option value="high" {% if form.urgency.value == 'high' %}selected{% endif %}>🔴 High - ASAP, can't use vehicle</option>
+                                </select>
+                                {% for error in form.urgency.errors %}
+                                <p class="text-sm text-red-600 dark:text-red-400 mt-2">{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Submit Button -->
+                    <div class="p-8 pt-0">
+                        <button type="submit" 
+                                class="w-full inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-purple-600 to-purple-700 text-white rounded-xl font-semibold hover:from-purple-700 hover:to-purple-800 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition-all duration-200 shadow-soft hover:shadow-medium group">
+                            <svg class="w-6 h-6 mr-3 group-hover:rotate-12 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
                             </svg>
                             Submit Quote Request
@@ -115,34 +300,209 @@
         </div>
         
         <!-- Info Sidebar -->
-        <div class="lg:col-span-1">
-            <div class="bg-gradient-to-br from-green-600 to-blue-600 rounded-lg p-6 text-white mb-6">
-                <h3 class="text-xl font-bold mb-4">Why Choose Alamana-jo?</h3>
+        <div class="lg:col-span-1 space-y-8">
+            <!-- Why Choose Us -->
+            <div class="bg-gradient-to-br from-green-600 to-blue-600 rounded-2xl p-8 text-white shadow-strong">
+                <h3 class="text-2xl font-bold mb-6 flex items-center">
+                    <div class="w-8 h-8 bg-white/20 rounded-xl flex items-center justify-center mr-3">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                        </svg>
+                    </div>
+                    Why Choose Alamana-jo?
+                </h3>
                 <div class="space-y-4">
                     <div class="flex items-start">
-                        <svg class="w-5 h-5 mr-3 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                        <div class="w-8 h-8 bg-white/20 rounded-xl flex items-center justify-center mr-3 flex-shrink-0 mt-0.5">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
                         <div>
-                            <h4 class="font-semibold">Expert Technicians</h4>
+                            <h4 class="font-semibold mb-1">Expert Technicians</h4>
                             <p class="text-sm text-green-100">Certified professionals with years of experience</p>
                         </div>
                     </div>
                     <div class="flex items-start">
-                        <svg class="w-5 h-5 mr-3 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                        <div class="w-8 h-8 bg-white/20 rounded-xl flex items-center justify-center mr-3 flex-shrink-0 mt-0.5">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
                         <div>
-                            <h4 class="font-semibold">Quick Turnaround</h4>
+                            <h4 class="font-semibold mb-1">Quick Turnaround</h4>
                             <p class="text-sm text-green-100">Fast and efficient service to get you back on the road</p>
                         </div>
                     </div>
                     <div class="flex items-start">
-                        <svg class="w-5 h-5 mr-3 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
+                        <div class="w-8 h-8 bg-white/20 rounded-xl flex items-center justify-center mr-3 flex-shrink-0 mt-0.5">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                            </svg>
+                        </div>
                         <div>
-                            <h4 class="font-semibold">Quality Parts</h4>
+                            <h4 class="font-semibold mb-1">Quality Parts</h4>
                             <p class="text-sm text-green-100">Only genuine and compatible parts with warranty</p>
                         </div>
                     </div>
                 </div>
             </div>
+            
+            <!-- Process Timeline -->
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-soft border border-gray-200 dark:border-gray-700 p-8">
+                <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
+                    <div class="w-8 h-8 bg-purple-100 dark:bg-purple-900/20 rounded-xl flex items-center justify-center mr-3">
+                        <svg class="w-5 h-5 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                        </svg>
+                    </div>
+                    What Happens Next?
+                </h3>
+                <div class="space-y-4">
+                    <div class="flex items-start">
+                        <div class="w-8 h-8 bg-blue-100 dark:bg-blue-900/20 rounded-xl flex items-center justify-center mr-3 flex-shrink-0">
+                            <span class="text-blue-600 dark:text-blue-400 font-bold text-sm">1</span>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-gray-900 dark:text-white mb-1">Review & Analysis</h4>
+                            <p class="text-sm text-gray-600 dark:text-gray-400">Our technicians will review your request within 24 hours</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start">
+                        <div class="w-8 h-8 bg-green-100 dark:bg-green-900/20 rounded-xl flex items-center justify-center mr-3 flex-shrink-0">
+                            <span class="text-green-600 dark:text-green-400 font-bold text-sm">2</span>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-gray-900 dark:text-white mb-1">Detailed Quote</h4>
+                            <p class="text-sm text-gray-600 dark:text-gray-400">We'll contact you with a detailed quote and timeline</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start">
+                        <div class="w-8 h-8 bg-purple-100 dark:bg-purple-900/20 rounded-xl flex items-center justify-center mr-3 flex-shrink-0">
+                            <span class="text-purple-600 dark:text-purple-400 font-bold text-sm">3</span>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-gray-900 dark:text-white mb-1">Schedule Service</h4>
+                            <p class="text-sm text-gray-600 dark:text-gray-400">Schedule your service appointment at your convenience</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Contact Info -->
+            <div class="bg-gray-50 dark:bg-gray-700 rounded-2xl p-6 border border-gray-200 dark:border-gray-600">
+                <h4 class="font-semibold text-gray-900 dark:text-white mb-4">Need to speak with us?</h4>
+                <div class="space-y-3">
+                    <a href="tel:+32499890237" 
+                       class="flex items-center p-3 bg-white dark:bg-gray-800 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
+                        <div class="w-8 h-8 bg-green-100 dark:bg-green-900/20 rounded-lg flex items-center justify-center mr-3">
+                            <svg class="w-4 h-4 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <div class="font-medium text-gray-900 dark:text-white">Call Us</div>
+                            <div class="text-sm text-gray-600 dark:text-gray-400">+32 499 89 02 37</div>
+                        </div>
+                    </a>
+                    
+                    <a href="mailto:alamanajo@gmail.com" 
+                       class="flex items-center p-3 bg-white dark:bg-gray-800 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
+                        <div class="w-8 h-8 bg-blue-100 dark:bg-blue-900/20 rounded-lg flex items-center justify-center mr-3">
+                            <svg class="w-4 h-4 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <div class="font-medium text-gray-900 dark:text-white">Email Us</div>
+                            <div class="text-sm text-gray-600 dark:text-gray-400">alamanajo@gmail.com</div>
+                        </div>
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 </div>
+
+<script>
+// Enhanced form handling
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('form[method="post"]');
+    const photoUpload = document.getElementById('photo-upload');
+    const photoPreview = document.getElementById('photo-preview');
+    const inputs = form.querySelectorAll('input, select, textarea');
+    
+    // Photo upload preview
+    if (photoUpload) {
+        photoUpload.addEventListener('change', function(e) {
+            const files = Array.from(e.target.files);
+            photoPreview.innerHTML = '';
+            photoPreview.classList.remove('hidden');
+            
+            files.forEach((file, index) => {
+                if (file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const div = document.createElement('div');
+                        div.className = 'relative group';
+                        div.innerHTML = `
+                            <img src="${e.target.result}" 
+                                 class="w-full h-24 object-cover rounded-lg border border-gray-200 dark:border-gray-600"
+                                 alt="Upload preview ${index + 1}">
+                            <div class="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center">
+                                <span class="text-white text-xs">${file.name}</span>
+                            </div>
+                        `;
+                        photoPreview.appendChild(div);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        });
+    }
+    
+    // Form validation
+    inputs.forEach(input => {
+        input.addEventListener('blur', function() {
+            validateField(this);
+        });
+        
+        input.addEventListener('input', function() {
+            clearFieldError(this);
+        });
+    });
+    
+    function validateField(field) {
+        const isValid = field.checkValidity();
+        
+        field.classList.remove('border-red-500', 'border-green-500');
+        
+        if (field.value.trim() !== '') {
+            if (isValid) {
+                field.classList.add('border-green-500');
+            } else {
+                field.classList.add('border-red-500');
+            }
+        }
+    }
+    
+    function clearFieldError(field) {
+        field.classList.remove('border-red-500');
+    }
+    
+    // Auto-fill from user data if logged in
+    {% if user.is_authenticated %}
+    const fullNameField = document.getElementById('id_full_name');
+    const emailField = document.getElementById('id_email');
+    
+    if (fullNameField && !fullNameField.value) {
+        fullNameField.value = '{{ user.first_name }} {{ user.last_name }}'.trim();
+    }
+    
+    if (emailField && !emailField.value) {
+        emailField.value = '{{ user.email }}';
+    }
+    {% endif %}
+});
+</script>
 {% endblock content %}

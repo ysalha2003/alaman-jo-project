@@ -339,7 +339,7 @@ class ReviewAdmin(ModelAdmin):
     
     @display(description="Rating")
     def rating_stars(self, obj):
-        stars = '★' * obj.rating + '☆' * (5 - obj.rating)
+        stars = '⭐' * obj.rating + '☆' * (5 - obj.rating)
         return format_html('<span class="text-yellow-500 text-lg">{}</span>', stars)
     
     def approve_reviews(self, request, queryset):
@@ -608,7 +608,6 @@ class ShopSettingAdmin(ModelAdmin):
         return False
 
 
-# Register simple models with basic admin
 @admin.register(CartItem)
 class CartItemAdmin(ModelAdmin):
     list_display = ['cart_owner', 'product', 'quantity', 'total_price', 'added_at']
@@ -627,8 +626,23 @@ class WishlistAdmin(ModelAdmin):
     list_filter = ['created_at']
     search_fields = ['user__username', 'product__name']
 
+@admin.register(MaintenancePhoto)
+class MaintenancePhotoAdmin(ModelAdmin):
+    list_display = ('quote_link', 'image_preview', 'comment', 'uploaded_at')
+    list_filter = ('uploaded_at',)
+    search_fields = ('quote__full_name', 'quote__id', 'comment')
+    raw_id_fields = ('quote',)
 
-# Simple registration for other models that don't need complex admin
-admin.site.register(ProductImage)
-admin.site.register(ProductSpecification)
-admin.site.register(MaintenancePhoto)
+    @display(description="Image")
+    def image_preview(self, obj):
+        if obj.image:
+            return format_html(
+                '<img src="{}" width="100" height="100" style="object-fit: cover; border-radius: 8px;" />',
+                obj.image.url
+            )
+        return "No Image"
+
+    @display(description="Quote", ordering="quote")
+    def quote_link(self, obj):
+        link = reverse("admin:shop_maintenancequote_change", args=[obj.quote.id])
+        return format_html('<a href="{}">Quote #{}</a>', link, obj.quote.id)

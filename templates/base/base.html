@@ -4,22 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>{% block title %}Alamana-jo - Premium Bike Parts & Expert Service{% endblock title %}</title>
-    <meta name="description" content="{% block description %}Professional spare parts and maintenance services for bikes, e-bikes, and e-scooters in Antwerpen. Quality parts, expert service, fast delivery.{% endblock description %}">
+    <meta name="description" content="{% block description %}Professional spare parts and maintenance services for bikes, e-bikes, and e-scooters in Antwerpen.{% endblock description %}">
     
-    <!-- Open Graph / Facebook -->
+    <!-- Open Graph -->
     <meta property="og:type" content="website">
     <meta property="og:title" content="{% block og_title %}Alamana-jo{% endblock og_title %}">
     <meta property="og:description" content="{% block og_description %}Professional bike parts and service{% endblock og_description %}">
-    <meta property="og:image" content="{% block og_image %}{% load static %}{% static 'images/og-image.jpg' %}{% endblock og_image %}">
-    
-    <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:title" content="{% block twitter_title %}Alamana-jo{% endblock twitter_title %}">
-    <meta property="twitter:description" content="{% block twitter_description %}Professional bike parts and service{% endblock twitter_description %}">
     
     <!-- Favicon -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔧</text></svg>">
-    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔧</text></svg>">
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -49,24 +42,11 @@
                             700: '#0369a1',
                             800: '#075985',
                             900: '#0c4a6e',
-                        },
-                        gray: {
-                            50: '#fafafa',
-                            100: '#f4f4f5',
-                            200: '#e4e4e7',
-                            300: '#d4d4d8',
-                            400: '#a1a1aa',
-                            500: '#71717a',
-                            600: '#52525b',
-                            700: '#3f3f46',
-                            800: '#27272a',
-                            900: '#18181b',
                         }
                     },
                     animation: {
                         'fade-in': 'fadeIn 0.6s ease-in-out',
                         'slide-up': 'slideUp 0.4s ease-out',
-                        'scale-in': 'scaleIn 0.3s ease-out',
                         'float': 'float 3s ease-in-out infinite',
                     },
                     keyframes: {
@@ -77,10 +57,6 @@
                         slideUp: {
                             '0%': { opacity: '0', transform: 'translateY(20px)' },
                             '100%': { opacity: '1', transform: 'translateY(0)' }
-                        },
-                        scaleIn: {
-                            '0%': { opacity: '0', transform: 'scale(0.95)' },
-                            '100%': { opacity: '1', transform: 'scale(1)' }
                         },
                         float: {
                             '0%, 100%': { transform: 'translateY(0px)' },
@@ -103,12 +79,6 @@
     <!-- PWA Support -->
     <meta name="theme-color" content="#0ea5e9">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="apple-mobile-web-app-title" content="Alamana-jo">
-    
-    <!-- Performance hints -->
-    <link rel="dns-prefetch" href="//fonts.googleapis.com">
-    <link rel="dns-prefetch" href="//cdn.jsdelivr.net">
     
     {% block extra_head %}{% endblock extra_head %}
 </head>
@@ -116,16 +86,13 @@
     
     <!-- Site Notification Banner -->
     {% if shop_settings.is_notification_active and shop_settings.site_notification %}
-    <div class="bg-gradient-to-r from-primary-600 to-primary-700 text-white p-3 text-center text-sm font-medium shadow-soft relative animate-slide-up" role="alert">
+    <div class="bg-primary-600 text-white p-3 text-center text-sm font-medium" role="alert">
         <div class="container mx-auto flex items-center justify-center">
-            <svg class="w-4 h-4 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-            </svg>
             <span class="flex-1">{{ shop_settings.site_notification|safe }}</span>
         </div>
         <button onclick="this.parentElement.style.display='none'" 
-                class="absolute right-3 top-1/2 transform -translate-y-1/2 text-white/80 hover:text-white p-1 rounded-full hover:bg-white/10 transition-colors"
-                aria-label="Close notification">
+                class="absolute right-3 top-1/2 transform -translate-y-1/2 text-white/80 hover:text-white p-1"
+                aria-label="Close">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
             </svg>
@@ -138,39 +105,30 @@
 
     <!-- Main Content -->
     <main class="flex-grow">
-        <!-- Loading Indicator -->
-        <div id="loading-indicator" class="fixed top-0 left-0 w-full h-1 bg-gradient-to-r from-primary-500 to-primary-600 transform -translate-x-full transition-transform duration-300 z-50"></div>
-        
         <!-- Messages -->
         {% if messages %}
-            <div class="container mx-auto px-4 py-6">
+            <div class="container mx-auto px-4 py-4">
                 <div class="max-w-4xl mx-auto space-y-3">
                     {% for message in messages %}
-                        <div role="alert" class="alert-modern {{ message.tags }} animate-fade-in">
-                            <div class="flex items-start p-4 rounded-xl shadow-soft border-l-4 {% if message.tags == 'success' %}bg-green-50 border-green-500 text-green-700{% elif message.tags == 'error' %}bg-red-50 border-red-500 text-red-700{% elif message.tags == 'warning' %}bg-yellow-50 border-yellow-500 text-yellow-700{% else %}bg-blue-50 border-blue-500 text-blue-700{% endif %}">
+                        <div role="alert" class="p-4 rounded-xl border-l-4 animate-fade-in {% if message.tags == 'success' %}bg-green-50 border-green-500 text-green-700{% elif message.tags == 'error' %}bg-red-50 border-red-500 text-red-700{% elif message.tags == 'warning' %}bg-yellow-50 border-yellow-500 text-yellow-700{% else %}bg-blue-50 border-blue-500 text-blue-700{% endif %}">
+                            <div class="flex items-start">
                                 <div class="flex-shrink-0 mr-3">
                                     {% if message.tags == 'success' %}
-                                        <svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                                         </svg>
                                     {% elif message.tags == 'error' %}
-                                        <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
                                         </svg>
-                                    {% elif message.tags == 'warning' %}
-                                        <svg class="w-5 h-5 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16c-.77.833.192 2.5 1.732 2.5z" />
-                                        </svg>
                                     {% else %}
-                                        <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                                         </svg>
                                     {% endif %}
                                 </div>
-                                <div class="flex-1">
-                                    <span class="font-medium">{{ message }}</span>
-                                </div>
-                                <button onclick="this.parentElement.parentElement.remove()" class="flex-shrink-0 ml-4 p-1 rounded-full hover:bg-black/5 transition-colors">
+                                <span class="font-medium">{{ message }}</span>
+                                <button onclick="this.parentElement.parentElement.remove()" class="ml-auto p-1 hover:bg-black/5 rounded transition-colors">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                                     </svg>
@@ -183,9 +141,7 @@
         {% endif %}
         
         <!-- Page Content -->
-        <div class="container mx-auto px-4 py-8">
-            {% block content %}{% endblock content %}
-        </div>
+        {% block content %}{% endblock content %}
     </main>
 
     <!-- Footer -->
@@ -194,21 +150,9 @@
     <!-- Toast Container -->
     <div id="toast-container" class="fixed top-24 right-4 z-50 space-y-3 max-w-sm"></div>
     
-    <!-- Global Loading Overlay -->
-    <div id="global-loading" class="fixed inset-0 bg-black/20 backdrop-blur-sm z-50 hidden">
-        <div class="flex items-center justify-center h-full">
-            <div class="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-strong max-w-sm mx-4">
-                <div class="flex items-center space-x-4">
-                    <div class="animate-spin rounded-full h-8 w-8 border-3 border-primary-200 border-t-primary-600"></div>
-                    <span class="text-gray-700 dark:text-gray-300 font-medium">Loading...</span>
-                </div>
-            </div>
-        </div>
-    </div>
-    
     <!-- Scripts -->
     <script>
-        // Enhanced Theme Switcher
+        // Theme Switcher
         function themeSwitcher() {
             return {
                 theme: 'light',
@@ -219,7 +163,6 @@
                     const initialTheme = storedTheme || (systemPrefersDark ? 'dark' : 'light');
                     this.setTheme(initialTheme);
 
-                    // Watch for system theme changes
                     window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
                         if (!localStorage.getItem('theme')) {
                             this.setTheme(e.matches ? 'dark' : 'light');
@@ -236,7 +179,6 @@
                     localStorage.setItem('theme', newTheme);
                     document.documentElement.classList.toggle('dark', this.isDark);
                     
-                    // Update meta theme color
                     const metaThemeColor = document.querySelector("meta[name=theme-color]");
                     if (metaThemeColor) {
                         metaThemeColor.setAttribute("content", this.isDark ? "#18181b" : "#0ea5e9");
@@ -245,16 +187,8 @@
             }
         }
 
-        // Enhanced Global Utilities
+        // Global Utilities
         window.AlamanaUtils = {
-            showLoading() {
-                document.getElementById('global-loading').classList.remove('hidden');
-            },
-            
-            hideLoading() {
-                document.getElementById('global-loading').classList.add('hidden');
-            },
-            
             showToast(message, type = 'info', duration = 5000) {
                 const container = document.getElementById('toast-container');
                 const toast = document.createElement('div');
@@ -268,10 +202,8 @@
                 toast.className = `transform translate-x-full transition-all duration-300 p-4 rounded-xl border shadow-soft ${colors[type]} max-w-sm`;
                 toast.innerHTML = `
                     <div class="flex items-start">
-                        <div class="flex-1">
-                            <span class="font-medium">${message}</span>
-                        </div>
-                        <button onclick="this.closest('[class*=translate]').style.transform='translateX(100%)'; setTimeout(()=>this.closest('[class*=translate]').remove(), 300)" class="ml-3 p-1 rounded-full hover:bg-black/5 transition-colors">
+                        <span class="font-medium">${message}</span>
+                        <button onclick="this.closest('[class*=translate]').style.transform='translateX(100%)'; setTimeout(()=>this.closest('[class*=translate]').remove(), 300)" class="ml-3 p-1 rounded-full hover:bg-black/5">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                             </svg>
@@ -280,51 +212,15 @@
                 `;
                 
                 container.appendChild(toast);
-                
-                // Animate in
-                setTimeout(() => {
-                    toast.style.transform = 'translateX(0)';
-                }, 100);
-                
-                // Auto remove
+                setTimeout(() => toast.style.transform = 'translateX(0)', 100);
                 setTimeout(() => {
                     toast.style.transform = 'translateX(100%)';
                     setTimeout(() => toast.remove(), 300);
                 }, duration);
-            },
-            
-            scrollTo(element, offset = 0) {
-                const targetElement = typeof element === 'string' ? document.querySelector(element) : element;
-                if (targetElement) {
-                    const elementPosition = targetElement.getBoundingClientRect().top;
-                    const offsetPosition = elementPosition + window.pageYOffset - offset;
-                    
-                    window.scrollTo({
-                        top: offsetPosition,
-                        behavior: 'smooth'
-                    });
-                }
-            },
-            
-            formatCurrency(amount, currency = 'EUR', locale = 'nl-BE') {
-                return new Intl.NumberFormat(locale, {
-                    style: 'currency',
-                    currency: currency
-                }).format(amount);
-            },
-            
-            async copyToClipboard(text) {
-                try {
-                    await navigator.clipboard.writeText(text);
-                    this.showToast('Copied to clipboard!', 'success');
-                } catch (err) {
-                    console.error('Failed to copy: ', err);
-                    this.showToast('Failed to copy', 'error');
-                }
             }
         };
 
-        // Enhanced form handling and loading states
+        // Enhanced form handling
         document.addEventListener('DOMContentLoaded', function() {
             // Auto-hide mobile keyboard on scroll
             let isScrolling = false;
@@ -338,7 +234,7 @@
                 }
             });
 
-            // Enhanced loading states for forms
+            // Loading states for forms
             const forms = document.querySelectorAll('form[method="post"]');
             forms.forEach(form => {
                 form.addEventListener('submit', function(e) {
@@ -353,7 +249,6 @@
                             </div>
                         `;
                         
-                        // Re-enable after 10 seconds as fallback
                         setTimeout(() => {
                             submitBtn.disabled = false;
                             submitBtn.innerHTML = originalText;
@@ -361,28 +256,9 @@
                     }
                 });
             });
-
-            // Add intersection observer for animations
-            const observerOptions = {
-                threshold: 0.1,
-                rootMargin: '0px 0px -50px 0px'
-            };
-
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('animate-fade-in');
-                    }
-                });
-            }, observerOptions);
-
-            // Observe elements for animation
-            document.querySelectorAll('.animate-on-scroll').forEach(el => {
-                observer.observe(el);
-            });
         });
 
-        // Enhanced viewport height fix for mobile browsers
+        // Mobile viewport height fix
         function setVH() {
             let vh = window.innerHeight * 0.01;
             document.documentElement.style.setProperty('--vh', `${vh}px`);
@@ -391,15 +267,6 @@
         setVH();
         window.addEventListener('resize', setVH);
         window.addEventListener('orientationchange', setVH);
-
-        // Performance monitoring and loading indicator
-        window.addEventListener('load', function() {
-            // Show completion of loading
-            document.getElementById('loading-indicator').style.transform = 'translateX(0)';
-            setTimeout(() => {
-                document.getElementById('loading-indicator').style.transform = 'translateX(100%)';
-            }, 300);
-        });
     </script>
     
     {% block extra_js %}{% endblock extra_js %}

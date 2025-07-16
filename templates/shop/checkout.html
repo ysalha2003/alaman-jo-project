@@ -1,0 +1,564 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Checkout - Alamana-jo{% endblock title %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 py-6">
+    <!-- Breadcrumb -->
+    <nav class="flex mb-6" aria-label="Breadcrumb">
+        <ol class="inline-flex items-center space-x-1 md:space-x-3 text-sm">
+            <li>
+                <a href="{% url 'shop:home' %}" class="text-gray-500 hover:text-primary-600 transition-colors">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path>
+                    </svg>
+                </a>
+            </li>
+            <li><svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg></li>
+            <li><a href="{% url 'shop:cart' %}" class="text-gray-500 hover:text-primary-600 transition-colors">Cart</a></li>
+            <li><svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg></li>
+            <li><span class="text-gray-900 dark:text-white font-medium">Checkout</span></li>
+        </ol>
+    </nav>
+
+    <!-- Progress Bar -->
+    <div class="mb-8">
+        <div class="flex items-center justify-center">
+            <div class="flex items-center">
+                <!-- Cart Step -->
+                <div class="flex items-center text-primary-600">
+                    <div class="w-8 h-8 bg-primary-600 text-white rounded-full flex items-center justify-center text-sm font-bold">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                        </svg>
+                    </div>
+                    <span class="ml-2 text-sm font-medium hidden sm:inline">Cart</span>
+                </div>
+                
+                <!-- Arrow -->
+                <svg class="w-5 h-5 text-primary-600 mx-2 sm:mx-4" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+                </svg>
+                
+                <!-- Checkout Step -->
+                <div class="flex items-center text-primary-600">
+                    <div class="w-8 h-8 bg-primary-600 text-white rounded-full flex items-center justify-center text-sm font-bold">2</div>
+                    <span class="ml-2 text-sm font-medium hidden sm:inline">Checkout</span>
+                </div>
+                
+                <!-- Arrow -->
+                <svg class="w-5 h-5 text-gray-300 mx-2 sm:mx-4" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+                </svg>
+                
+                <!-- Payment Step -->
+                <div class="flex items-center text-gray-400">
+                    <div class="w-8 h-8 bg-gray-300 text-gray-600 rounded-full flex items-center justify-center text-sm font-bold">3</div>
+                    <span class="ml-2 text-sm font-medium hidden sm:inline">Payment</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if not cart_items.exists %}
+    <!-- Empty Cart -->
+    <div class="text-center py-20">
+        <div class="w-24 h-24 mx-auto mb-6 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center">
+            <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m1.6 8L6 6H3m4 7l-1.5 6M17 21a2 2 0 100-4 2 2 0 000 4z" />
+            </svg>
+        </div>
+        <h2 class="text-2xl font-bold mb-4 text-gray-900 dark:text-white">Cart is empty</h2>
+        <p class="text-gray-600 dark:text-gray-400 mb-6">
+            Add items to cart before checkout.
+        </p>
+        <a href="{% url 'shop:product_list' %}" 
+           class="inline-flex items-center px-6 py-3 bg-primary-600 text-white rounded-xl font-semibold hover:bg-primary-700 transition-colors">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+            </svg>
+            Start Shopping
+        </a>
+    </div>
+    {% else %}
+
+    <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+        <!-- Checkout Form -->
+        <div class="xl:col-span-2">
+            <form method="post" id="checkout-form" class="space-y-6">
+                {% csrf_token %}
+                
+                <!-- Contact Information -->
+                <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-soft border border-gray-200 dark:border-gray-700 p-4 md:p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="w-6 h-6 bg-primary-100 dark:bg-primary-900/20 rounded-lg flex items-center justify-center mr-2">
+                            <svg class="w-4 h-4 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                            </svg>
+                        </div>
+                        <h2 class="text-lg font-bold">Contact</h2>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium mb-2" for="first_name">First Name *</label>
+                            <input type="text" 
+                                   id="first_name" 
+                                   name="first_name" 
+                                   value="{% if user.is_authenticated %}{{ user.first_name }}{% endif %}"
+                                   class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                                   required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-2" for="last_name">Last Name *</label>
+                            <input type="text" 
+                                   id="last_name" 
+                                   name="last_name" 
+                                   value="{% if user.is_authenticated %}{{ user.last_name }}{% endif %}"
+                                   class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                                   required>
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="block text-sm font-medium mb-2" for="email">Email *</label>
+                            <input type="email" 
+                                   id="email" 
+                                   name="email" 
+                                   value="{% if user.is_authenticated %}{{ user.email }}{% endif %}"
+                                   class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                                   required>
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="block text-sm font-medium mb-2" for="phone">Phone</label>
+                            <input type="tel" 
+                                   id="phone" 
+                                   name="phone" 
+                                   class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Shipping Address -->
+                <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-soft border border-gray-200 dark:border-gray-700 p-4 md:p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="w-6 h-6 bg-blue-100 dark:bg-blue-900/20 rounded-lg flex items-center justify-center mr-2">
+                            <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                            </svg>
+                        </div>
+                        <h2 class="text-lg font-bold">Shipping</h2>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium mb-2" for="address_line1">Address *</label>
+                            <input type="text" 
+                                   id="address_line1" 
+                                   name="shipping_address_line1" 
+                                   class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                                   required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-2" for="address_line2">Address 2</label>
+                            <input type="text" 
+                                   id="address_line2" 
+                                   name="shipping_address_line2" 
+                                   class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium mb-2" for="postal_code">Postal Code *</label>
+                                <input type="text" 
+                                       id="postal_code" 
+                                       name="shipping_postal_code" 
+                                       class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                                       required>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-2" for="city">City *</label>
+                                <input type="text" 
+                                       id="city" 
+                                       name="shipping_city" 
+                                       class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                                       required>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-2" for="country">Country *</label>
+                                <select id="country" 
+                                        name="shipping_country" 
+                                        class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                                        required>
+                                    <option value="">Select Country</option>
+                                    <option value="BE" selected>Belgium</option>
+                                    <option value="NL">Netherlands</option>
+                                    <option value="DE">Germany</option>
+                                    <option value="FR">France</option>
+                                    <option value="LU">Luxembourg</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Billing Address -->
+                <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-soft border border-gray-200 dark:border-gray-700 p-4 md:p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center">
+                            <div class="w-6 h-6 bg-green-100 dark:bg-green-900/20 rounded-lg flex items-center justify-center mr-2">
+                                <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                </svg>
+                            </div>
+                            <h2 class="text-lg font-bold">Billing</h2>
+                        </div>
+                        <label class="flex items-center">
+                            <input type="checkbox" 
+                                   id="same_as_shipping" 
+                                   name="same_as_shipping" 
+                                   class="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                                   checked>
+                            <span class="ml-2 text-sm text-gray-600 dark:text-gray-400">Same as shipping</span>
+                        </label>
+                    </div>
+                    
+                    <div id="billing-fields" class="space-y-4 hidden">
+                        <div>
+                            <label class="block text-sm font-medium mb-2" for="billing_address_line1">Address *</label>
+                            <input type="text" 
+                                   id="billing_address_line1" 
+                                   name="billing_address_line1" 
+                                   class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-2" for="billing_address_line2">Address 2</label>
+                            <input type="text" 
+                                   id="billing_address_line2" 
+                                   name="billing_address_line2" 
+                                   class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium mb-2" for="billing_postal_code">Postal Code *</label>
+                                <input type="text" 
+                                       id="billing_postal_code" 
+                                       name="billing_postal_code" 
+                                       class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-2" for="billing_city">City *</label>
+                                <input type="text" 
+                                       id="billing_city" 
+                                       name="billing_city" 
+                                       class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-2" for="billing_country">Country *</label>
+                                <select id="billing_country" 
+                                        name="billing_country" 
+                                        class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+                                    <option value="">Select Country</option>
+                                    <option value="BE">Belgium</option>
+                                    <option value="NL">Netherlands</option>
+                                    <option value="DE">Germany</option>
+                                    <option value="FR">France</option>
+                                    <option value="LU">Luxembourg</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Shipping Method -->
+                <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-soft border border-gray-200 dark:border-gray-700 p-4 md:p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="w-6 h-6 bg-purple-100 dark:bg-purple-900/20 rounded-lg flex items-center justify-center mr-2">
+                            <svg class="w-4 h-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                            </svg>
+                        </div>
+                        <h2 class="text-lg font-bold">Shipping Method</h2>
+                    </div>
+                    
+                    <div class="space-y-3">
+                        <label class="flex items-center p-4 border border-gray-200 dark:border-gray-600 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors">
+                            <input type="radio" 
+                                   name="shipping_method" 
+                                   value="standard" 
+                                   class="text-primary-600 focus:ring-primary-500"
+                                   {% if cart_total_price >= 100 %}checked{% endif %}>
+                            <div class="ml-4 flex-1">
+                                <div class="flex items-center justify-between">
+                                    <span class="font-medium">Standard</span>
+                                    <span class="font-bold">
+                                        {% if cart_total_price >= 100 %}
+                                            Free
+                                        {% else %}
+                                            €15.00
+                                        {% endif %}
+                                    </span>
+                                </div>
+                                <p class="text-sm text-gray-600 dark:text-gray-400">2-3 business days</p>
+                                {% if cart_total_price < 100 %}
+                                <p class="text-sm text-green-600">Free on orders €100+</p>
+                                {% endif %}
+                            </div>
+                        </label>
+                        
+                        <label class="flex items-center p-4 border border-gray-200 dark:border-gray-600 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors">
+                            <input type="radio" 
+                                   name="shipping_method" 
+                                   value="express" 
+                                   class="text-primary-600 focus:ring-primary-500">
+                            <div class="ml-4 flex-1">
+                                <div class="flex items-center justify-between">
+                                    <span class="font-medium">Express</span>
+                                    <span class="font-bold">€25.00</span>
+                                </div>
+                                <p class="text-sm text-gray-600 dark:text-gray-400">Next business day</p>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Notes -->
+                <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-soft border border-gray-200 dark:border-gray-700 p-4 md:p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="w-6 h-6 bg-orange-100 dark:bg-orange-900/20 rounded-lg flex items-center justify-center mr-2">
+                            <svg class="w-4 h-4 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-1l-4 4z" />
+                            </svg>
+                        </div>
+                        <h2 class="text-lg font-bold">Notes</h2>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium mb-2" for="notes">Order Notes (Optional)</label>
+                        <textarea id="notes" 
+                                  name="notes" 
+                                  rows="3" 
+                                  placeholder="Special delivery instructions..."
+                                  class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white resize-none"></textarea>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- Order Summary -->
+        <div class="xl:col-span-1">
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-soft border border-gray-200 dark:border-gray-700 p-4 md:p-6 sticky top-20">
+                <h2 class="text-xl font-bold mb-6 flex items-center">
+                    <div class="w-6 h-6 bg-gradient-to-br from-primary-500 to-primary-600 rounded-lg flex items-center justify-center mr-2">
+                        <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                        </svg>
+                    </div>
+                    Summary
+                </h2>
+                
+                <!-- Cart Items -->
+                <div class="space-y-3 mb-6 max-h-48 overflow-y-auto">
+                    {% for item in cart_items %}
+                    <div class="flex items-center space-x-3 p-3 bg-gray-50 dark:bg-gray-700 rounded-xl">
+                        {% if item.product.primary_image %}
+                        <img src="{{ item.product.primary_image.image.url }}" 
+                             alt="{{ item.product.name }}" 
+                             class="w-10 h-10 object-cover rounded-lg">
+                        {% else %}
+                        <div class="w-10 h-10 bg-gray-200 dark:bg-gray-600 rounded-lg flex items-center justify-center">
+                            <span class="text-gray-400 text-xs">🔧</span>
+                        </div>
+                        {% endif %}
+                        <div class="flex-1 min-w-0">
+                            <p class="font-medium text-sm truncate">{{ item.product.brand }} {{ item.product.name }}</p>
+                            <div class="flex items-center justify-between">
+                                <p class="text-xs text-gray-500">{{ item.quantity }}x €{{ item.product.price }}</p>
+                                <p class="text-sm font-medium">€{{ item.total_price }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                
+                <!-- Order Totals -->
+                <div class="space-y-3 mb-6 text-sm">
+                    <div class="flex justify-between">
+                        <span class="text-gray-600 dark:text-gray-400">Subtotal</span>
+                        <span class="font-medium">€{{ cart_total_price }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-600 dark:text-gray-400">Shipping</span>
+                        <span class="font-medium" id="shipping-cost">
+                            {% if cart_total_price >= 100 %}
+                                Free
+                            {% else %}
+                                €15.00
+                            {% endif %}
+                        </span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-600 dark:text-gray-400">Tax (21%)</span>
+                        <span class="font-medium">€{{ cart_tax_amount }}</span>
+                    </div>
+                    <div class="border-t border-gray-200 dark:border-gray-700 pt-3">
+                        <div class="flex justify-between text-lg font-bold">
+                            <span>Total</span>
+                            <span class="text-primary-600" id="total-amount">€{{ cart_final_total }}</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Free Shipping Progress -->
+                {% if cart_total_price < 100 %}
+                <div class="mb-6">
+                    <div class="flex items-center justify-between text-sm text-gray-600 dark:text-gray-400 mb-2">
+                        <span>Add €{{ 100|floatformat:2|add:cart_total_price|floatformat:2 }} for free shipping</span>
+                        <span>{{ cart_total_price|floatformat:0 }}%</span>
+                    </div>
+                    <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                        <div class="bg-gradient-to-r from-primary-500 to-primary-600 h-2 rounded-full transition-all duration-500" 
+                             style="width: {% widthratio cart_total_price 100 100 %}%"></div>
+                    </div>
+                </div>
+                {% endif %}
+                
+                <!-- Place Order Button -->
+                <button type="submit" 
+                        form="checkout-form"
+                        class="w-full px-6 py-4 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white rounded-xl font-semibold transition-all duration-200 shadow-soft hover:shadow-medium flex items-center justify-center">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                    </svg>
+                    Place Order
+                </button>
+                
+                <!-- Security Notice -->
+                <div class="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-xl p-4 mt-6">
+                    <div class="flex items-start">
+                        <svg class="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                        </svg>
+                        <div class="text-sm text-green-700 dark:text-green-300">
+                            <div class="font-medium mb-1">Secure Checkout</div>
+                            <div class="text-xs opacity-80">SSL encrypted</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Payment Methods -->
+                <div class="mt-4 text-center">
+                    <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">We accept</p>
+                    <div class="flex justify-center gap-3">
+                        <div class="flex items-center gap-1 px-3 py-2 bg-gray-50 dark:bg-gray-700 rounded-lg text-xs font-medium">
+                            <span>💳</span> Cards
+                        </div>
+                        <div class="flex items-center gap-1 px-3 py-2 bg-gray-50 dark:bg-gray-700 rounded-lg text-xs font-medium">
+                            <span>🏦</span> iDEAL
+                        </div>
+                        <div class="flex items-center gap-1 px-3 py-2 bg-gray-50 dark:bg-gray-700 rounded-lg text-xs font-medium">
+                            <span>📱</span> PayPal
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<script>
+// Billing address toggle
+document.getElementById('same_as_shipping').addEventListener('change', function() {
+    const billingFields = document.getElementById('billing-fields');
+    const billingInputs = billingFields.querySelectorAll('input, select');
+    
+    if (this.checked) {
+        billingFields.classList.add('hidden');
+        billingInputs.forEach(input => {
+            input.removeAttribute('required');
+        });
+    } else {
+        billingFields.classList.remove('hidden');
+        billingInputs.forEach(input => {
+            if (input.name.includes('address_line1') || input.name.includes('postal_code') || 
+                input.name.includes('city') || input.name.includes('country')) {
+                input.setAttribute('required', 'required');
+            }
+        });
+    }
+});
+
+// Shipping method change
+document.querySelectorAll('input[name="shipping_method"]').forEach(radio => {
+    radio.addEventListener('change', function() {
+        updateShippingCost();
+    });
+});
+
+function updateShippingCost() {
+    const selectedMethod = document.querySelector('input[name="shipping_method"]:checked');
+    const shippingCostElement = document.getElementById('shipping-cost');
+    const totalElement = document.getElementById('total-amount');
+    
+    let shippingCost = 0;
+    const subtotal = {{ cart_total_price }};
+    const tax = {{ cart_tax_amount }};
+    
+    if (selectedMethod) {
+        if (selectedMethod.value === 'standard') {
+            shippingCost = subtotal >= 100 ? 0 : 15;
+        } else if (selectedMethod.value === 'express') {
+            shippingCost = 25;
+        }
+    }
+    
+    shippingCostElement.textContent = shippingCost === 0 ? 'Free' : '€' + shippingCost.toFixed(2);
+    totalElement.textContent = '€' + (subtotal + shippingCost + tax).toFixed(2);
+}
+
+// Form validation and submission
+document.getElementById('checkout-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    // Add loading state
+    const submitBtn = this.querySelector('button[type="submit"]');
+    const originalText = submitBtn.innerHTML;
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = `
+        <div class="flex items-center">
+            <div class="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent mr-2"></div>
+            Processing...
+        </div>
+    `;
+    
+    // Simulate processing delay then submit
+    setTimeout(() => {
+        this.submit();
+    }, 1000);
+});
+
+// Auto-fill city based on postal code (Belgium specific)
+document.getElementById('postal_code').addEventListener('blur', function() {
+    const postalCode = this.value;
+    const cityField = document.getElementById('city');
+    
+    // Simple Belgian postal code to city mapping
+    const cityMap = {
+        '2000': 'Antwerpen',
+        '2018': 'Antwerpen',
+        '1000': 'Brussels',
+        '9000': 'Ghent',
+        '3000': 'Leuven',
+        '4000': 'Liège'
+    };
+    
+    if (cityMap[postalCode] && !cityField.value) {
+        cityField.value = cityMap[postalCode];
+    }
+});
+
+// Initialize
+document.addEventListener('DOMContentLoaded', function() {
+    updateShippingCost();
+});
+</script>
+{% endblock content %}

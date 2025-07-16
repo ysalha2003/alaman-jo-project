@@ -73,6 +73,10 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'shop.context_processors.cart_context',
                 'shop.context_processors.shop_context',
+                'shop.context_processors.global_shop_settings',
+                'shop.context_processors.user_context',
+                'shop.context_processors.mobile_context',
+                'shop.context_processors.performance_context',
             ],
         },
     },
@@ -147,11 +151,11 @@ if not DEBUG:
 
 # Messages framework
 MESSAGE_TAGS = {
-    messages.DEBUG: 'alert-info',
-    messages.INFO: 'alert-info',
-    messages.SUCCESS: 'alert-success',
-    messages.WARNING: 'alert-warning',
-    messages.ERROR: 'alert-error',
+    messages.DEBUG: 'info',
+    messages.INFO: 'info',
+    messages.SUCCESS: 'success',
+    messages.WARNING: 'warning',
+    messages.ERROR: 'error',
 }
 
 # Logging configuration
@@ -244,7 +248,7 @@ UNFOLD = {
     "SITE_TITLE": "Alamana-jo Admin",
     "SITE_HEADER": "Alamana-jo",
     "SITE_URL": "/",
-    "SITE_SYMBOL": "🔧",
+    "SITE_SYMBOL": "ðŸ”§",
     "SHOW_HISTORY": True,
     "SHOW_VIEW_ON_SITE": True,
     "ENVIRONMENT": "Alamana-jo E-commerce",
