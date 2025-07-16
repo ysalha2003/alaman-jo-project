@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand
 from django.utils.text import slugify
-from shop.models import Category, Product
+from shop.models import Category, Product, ProductSpecification
 from decimal import Decimal
 
 
@@ -164,6 +164,27 @@ class Command(BaseCommand):
             if created:
                 self.stdout.write(f'Created product: {product.brand} {product.name}')
         
+        self.stdout.write('Creating product specifications...')
+        try:
+            battery = Product.objects.get(sku='BS-BAT-48V15')
+            specs_data = [
+                {'name': 'Voltage', 'value': '48V'},
+                {'name': 'Capacity', 'value': '15Ah'},
+                {'name': 'Watt-hours', 'value': '720Wh'},
+                {'name': 'Cell Type', 'value': 'Lithium-Ion'},
+                {'name': 'Weight', 'value': '3.5 kg'},
+                {'name': 'Dimensions', 'value': '35 x 9 x 9 cm'},
+            ]
+            for spec_data in specs_data:
+                ProductSpecification.objects.get_or_create(
+                    product=battery,
+                    name=spec_data['name'],
+                    defaults={'value': spec_data['value']}
+                )
+            self.stdout.write(self.style.SUCCESS('Added specifications for Bosch battery.'))
+        except Product.DoesNotExist:
+            self.stdout.write(self.style.WARNING('Bosch battery not found, skipping specs.'))
+
         self.stdout.write(
             self.style.SUCCESS('Sample data created successfully!')
         )

@@ -12,7 +12,10 @@ urlpatterns = [
     path('product/<slug:slug>/', views.product_detail, name='product_detail'),
     path('category/<slug:slug>/', views.category_detail, name='category_detail'),
     
-    # Cart functionality (AJAX endpoints)
+    # AJAX endpoints
+    path('product/quick-view/<int:product_id>/', views.product_quick_view, name='product_quick_view'),
+    
+    # Cart functionality
     path('cart/', views.cart_detail, name='cart'),
     path('cart/add/', views.add_to_cart, name='add_to_cart'),
     path('cart/update/', views.update_cart_item, name='update_cart_item'),

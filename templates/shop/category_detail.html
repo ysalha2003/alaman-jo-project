@@ -66,13 +66,19 @@
                     </div>
                     {% if category_stats.avg_price %}
                     <div class="bg-purple-50 dark:bg-purple-900/20 rounded-xl p-4 text-center">
-                        <div class="text-2xl font-bold text-purple-600 dark:text-purple-400">€{{ category_stats.avg_price|floatformat:0 }}</div>
+                        <div class="text-2xl font-bold text-purple-600 dark:text-purple-400">â‚¬{{ category_stats.avg_price|floatformat:0 }}</div>
                         <div class="text-sm text-purple-700 dark:text-purple-300">Avg. Price</div>
                     </div>
                     {% endif %}
                     {% if category_stats.price_range.min_price and category_stats.price_range.max_price %}
                     <div class="bg-orange-50 dark:bg-orange-900/20 rounded-xl p-4 text-center">
-                        <div class="text-lg font-bold text-orange-600 dark:text-orange-400">€{{ category_stats.price_range.min_price }}-{{ category_stats.price_range.max_price }}</div>
+                        <div class="text-lg font-bold text-orange-600 dark:text-orange-400">
+                            {% if category_stats.price_range.min_price == category_stats.price_range.max_price %}
+                                â‚¬{{ category_stats.price_range.min_price|floatformat:2 }}
+                            {% else %}
+                                â‚¬{{ category_stats.price_range.min_price|floatformat:2 }} - â‚¬{{ category_stats.price_range.max_price|floatformat:2 }}
+                            {% endif %}
+                        </div>
                         <div class="text-sm text-orange-700 dark:text-orange-300">Price Range</div>
                     </div>
                     {% endif %}
@@ -137,7 +143,7 @@
                      loading="lazy">
                 {% else %}
                 <div class="w-full h-full bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-800 flex items-center justify-center">
-                    <span class="text-6xl text-gray-400">🛠️</span>
+                    <span class="text-6xl text-gray-400">ðŸ› ï¸ </span>
                 </div>
                 {% endif %}
                 
@@ -217,10 +223,10 @@
                 <div class="flex items-center justify-between">
                     <div class="flex flex-col">
                         {% if product.is_on_sale %}
-                        <span class="text-lg font-bold text-red-600">€{{ product.price }}</span>
-                        <span class="text-sm text-gray-500 line-through">€{{ product.compare_price }}</span>
+                        <span class="text-lg font-bold text-red-600">â‚¬{{ product.price }}</span>
+                        <span class="text-sm text-gray-500 line-through">â‚¬{{ product.compare_price }}</span>
                         {% else %}
-                        <span class="text-lg font-bold text-gray-900 dark:text-white">€{{ product.price }}</span>
+                        <span class="text-lg font-bold text-gray-900 dark:text-white">â‚¬{{ product.price }}</span>
                         {% endif %}
                     </div>
                     
@@ -374,9 +380,9 @@ function showToast(message, type) {
     }`;
     toast.innerHTML = `
         <div class="flex items-center">
-            <span class="mr-2">${type === 'success' ? '✅' : '❌'}</span>
+            <span class="mr-2">${type === 'success' ? 'âœ…' : 'â Œ'}</span>
             <span>${message}</span>
-            <button onclick="this.parentElement.parentElement.remove()" class="ml-4 text-white/80 hover:text-white">×</button>
+            <button onclick="this.parentElement.parentElement.remove()" class="ml-4 text-white/80 hover:text-white">Ã—</button>
         </div>
     `;
     

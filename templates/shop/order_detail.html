@@ -23,15 +23,10 @@
     </nav>
 
     <!-- Header -->
-    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-soft border border-gray-200 dark:border-gray-700 p-4 md:p-6 mb-6">
+    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-soft border border-gray-200 dark:border-gray-700 p-6 mb-6">
         <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
             <div>
-                <h1 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-2 flex items-center">
-                    <div class="w-8 h-8 bg-primary-100 dark:bg-primary-900/20 rounded-xl flex items-center justify-center mr-3">
-                        <svg class="w-5 h-5 text-primary-600 dark:text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                        </svg>
-                    </div>
+                <h1 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-2">
                     Order {{ order.order_number }}
                 </h1>
                 <p class="text-gray-600 dark:text-gray-400 text-sm">
@@ -43,44 +38,26 @@
                 <!-- Status Badge -->
                 {% if order.status == 'pending' %}
                 <span class="inline-flex items-center px-3 py-1 rounded-xl text-sm font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400">
-                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
                     Pending
                 </span>
                 {% elif order.status == 'paid' %}
                 <span class="inline-flex items-center px-3 py-1 rounded-xl text-sm font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">
-                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
-                    </svg>
                     Paid
                 </span>
                 {% elif order.status == 'processing' %}
                 <span class="inline-flex items-center px-3 py-1 rounded-xl text-sm font-medium bg-purple-100 text-purple-800 dark:bg-purple-900/20 dark:text-purple-400">
-                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4" />
-                    </svg>
                     Processing
                 </span>
                 {% elif order.status == 'shipped' %}
                 <span class="inline-flex items-center px-3 py-1 rounded-xl text-sm font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">
-                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" />
-                    </svg>
                     Shipped
                 </span>
                 {% elif order.status == 'delivered' %}
                 <span class="inline-flex items-center px-3 py-1 rounded-xl text-sm font-medium bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400">
-                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                    </svg>
                     Delivered
                 </span>
                 {% elif order.status == 'cancelled' %}
                 <span class="inline-flex items-center px-3 py-1 rounded-xl text-sm font-medium bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400">
-                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
                     Cancelled
                 </span>
                 {% endif %}
@@ -90,9 +67,6 @@
                     {% if order.status == 'pending' and order.payment_status == 'pending' %}
                     <a href="{% url 'shop:payment' order.order_number %}" 
                        class="inline-flex items-center px-4 py-2 bg-primary-600 text-white rounded-xl font-medium hover:bg-primary-700 transition-colors text-sm">
-                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
-                        </svg>
                         Pay Now
                     </a>
                     {% endif %}
@@ -100,9 +74,6 @@
                     {% if order.tracking_number %}
                     <a href="{{ order.tracking_url|default:'#' }}" target="_blank"
                        class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-xl font-medium hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors text-sm">
-                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                        </svg>
                         Track
                     </a>
                     {% endif %}
@@ -114,13 +85,8 @@
     <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
         <!-- Order Items -->
         <div class="xl:col-span-2 space-y-4">
-            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-soft border border-gray-200 dark:border-gray-700 p-4 md:p-6">
-                <h2 class="text-lg md:text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center">
-                    <div class="w-6 h-6 bg-blue-100 dark:bg-blue-900/20 rounded-lg flex items-center justify-center mr-2">
-                        <svg class="w-4 h-4 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                        </svg>
-                    </div>
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-soft border border-gray-200 dark:border-gray-700 p-6">
+                <h2 class="text-lg md:text-xl font-bold text-gray-900 dark:text-white mb-4">
                     Items ({{ order.items.count }})
                 </h2>
                 
@@ -176,15 +142,8 @@
         <!-- Order Summary & Info -->
         <div class="xl:col-span-1 space-y-4">
             <!-- Order Summary -->
-            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-soft border border-gray-200 dark:border-gray-700 p-4 md:p-6 sticky top-20">
-                <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center">
-                    <div class="w-6 h-6 bg-green-100 dark:bg-green-900/20 rounded-lg flex items-center justify-center mr-2">
-                        <svg class="w-4 h-4 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-                        </svg>
-                    </div>
-                    Summary
-                </h2>
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-soft border border-gray-200 dark:border-gray-700 p-6 sticky top-20">
+                <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-4">Summary</h2>
                 
                 <div class="space-y-3 text-sm">
                     <div class="flex justify-between items-center py-2 border-b border-gray-100 dark:border-gray-700">
@@ -207,15 +166,8 @@
             </div>
 
             <!-- Shipping Address -->
-            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-soft border border-gray-200 dark:border-gray-700 p-4 md:p-6">
-                <h3 class="text-base font-bold text-gray-900 dark:text-white mb-3 flex items-center">
-                    <div class="w-5 h-5 bg-blue-100 dark:bg-blue-900/20 rounded-lg flex items-center justify-center mr-2">
-                        <svg class="w-3 h-3 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                        </svg>
-                    </div>
-                    Shipping
-                </h3>
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-soft border border-gray-200 dark:border-gray-700 p-6">
+                <h3 class="text-base font-bold text-gray-900 dark:text-white mb-3">Shipping</h3>
                 <div class="text-sm text-gray-600 dark:text-gray-400 space-y-1">
                     <p class="font-medium text-gray-900 dark:text-white">{{ order.first_name }} {{ order.last_name }}</p>
                     <p>{{ order.shipping_address_line1 }}</p>
@@ -228,15 +180,8 @@
             </div>
 
             <!-- Order Timeline -->
-            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-soft border border-gray-200 dark:border-gray-700 p-4 md:p-6">
-                <h3 class="text-base font-bold text-gray-900 dark:text-white mb-3 flex items-center">
-                    <div class="w-5 h-5 bg-purple-100 dark:bg-purple-900/20 rounded-lg flex items-center justify-center mr-2">
-                        <svg class="w-3 h-3 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                    </div>
-                    Timeline
-                </h3>
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-soft border border-gray-200 dark:border-gray-700 p-6">
+                <h3 class="text-base font-bold text-gray-900 dark:text-white mb-3">Timeline</h3>
                 <div class="space-y-2 text-sm">
                     <div class="flex items-center">
                         <div class="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
@@ -289,17 +234,8 @@
 
             <!-- Help -->
             <div class="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 rounded-2xl p-4 border border-blue-200 dark:border-blue-800">
-                <h4 class="font-bold text-blue-800 dark:text-blue-200 mb-2 flex items-center text-sm">
-                    <div class="w-5 h-5 bg-blue-500 rounded-lg flex items-center justify-center mr-2">
-                        <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                    </div>
-                    Need Help?
-                </h4>
-                <p class="text-blue-700 dark:text-blue-300 text-xs mb-3">
-                    Questions about your order?
-                </p>
+                <h4 class="font-bold text-blue-800 dark:text-blue-200 mb-2 text-sm">Need Help?</h4>
+                <p class="text-blue-700 dark:text-blue-300 text-xs mb-3">Questions about your order?</p>
                 <div class="space-y-2">
                     <a href="{% url 'shop:contact' %}?subject=order&order_number={{ order.order_number }}" 
                        class="inline-flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200 text-xs font-medium">

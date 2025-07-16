@@ -6,7 +6,7 @@
                 <!-- Mobile Menu Button -->
                 <div class="lg:hidden">
                     <button x-data @click="$refs.mobileMenu.classList.toggle('hidden')" 
-                            class="p-2 rounded-xl text-gray-600 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-800 transition-all duration-200 touch-manipulation" 
+                            class="p-2 rounded-xl text-gray-600 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-800 transition-all duration-200" 
                             aria-label="Menu">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
@@ -16,10 +16,10 @@
                 
                 <!-- Logo -->
                 <a href="{% url 'shop:home' %}" class="flex items-center ml-4 lg:ml-0 group">
-                    <div class="flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-primary-500 to-primary-600 text-white mr-3 group-hover:scale-105 transition-transform duration-200">
+                    <div class="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-primary-500 to-primary-600 text-white mr-3 group-hover:scale-105 transition-transform duration-200">
                         <span class="text-lg font-bold">🔧</span>
                     </div>
-                    <span class="text-xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-300 bg-clip-text text-transparent">
+                    <span class="hidden sm:inline text-xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-300 bg-clip-text text-transparent">
                         Alamana JO
                     </span>
                 </a>
@@ -42,42 +42,38 @@
                     </button>
                     
                     <!-- Dropdown Menu -->
-                    <div class="absolute left-0 mt-2 w-80 bg-white dark:bg-gray-800 rounded-2xl shadow-strong border border-gray-200 dark:border-gray-700 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300">
-                        <div class="p-6">
-                            <div class="grid grid-cols-2 gap-4">
+                    <div class="absolute left-0 mt-2 w-72 bg-white dark:bg-gray-800 rounded-2xl shadow-strong border border-gray-200 dark:border-gray-700 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300">
+                        <div class="p-4">
+                            <div class="grid grid-cols-2 gap-3">
                                 <a href="{% url 'shop:product_list' %}?vehicle=e_bike" 
-                                   class="flex items-center p-3 rounded-xl hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-colors group/item">
+                                   class="flex items-center p-3 rounded-xl hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-colors">
                                     <span class="text-lg mr-3">⚡</span>
                                     <div>
                                         <div class="font-medium text-gray-900 dark:text-white">E-Bike</div>
-                                        <div class="text-xs text-gray-500">Electric bicycles</div>
                                     </div>
                                 </a>
                                 
                                 <a href="{% url 'shop:product_list' %}?vehicle=e_scooter" 
-                                   class="flex items-center p-3 rounded-xl hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-colors group/item">
+                                   class="flex items-center p-3 rounded-xl hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-colors">
                                     <span class="text-lg mr-3">🛴</span>
                                     <div>
                                         <div class="font-medium text-gray-900 dark:text-white">E-Scooter</div>
-                                        <div class="text-xs text-gray-500">Electric scooters</div>
                                     </div>
                                 </a>
                                 
                                 <a href="{% url 'shop:product_list' %}?vehicle=bike" 
-                                   class="flex items-center p-3 rounded-xl hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-colors group/item">
+                                   class="flex items-center p-3 rounded-xl hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-colors">
                                     <span class="text-lg mr-3">🚲</span>
                                     <div>
                                         <div class="font-medium text-gray-900 dark:text-white">Regular Bike</div>
-                                        <div class="text-xs text-gray-500">Traditional bikes</div>
                                     </div>
                                 </a>
                                 
                                 <a href="{% url 'shop:product_list' %}" 
-                                   class="flex items-center p-3 rounded-xl hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-colors group/item text-primary-600">
-                                    <span class="text-lg mr-3">→</span>
+                                   class="flex items-center p-3 rounded-xl hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-colors text-primary-600">
+                                    <span class="text-lg mr-3">⚙️</span>
                                     <div>
                                         <div class="font-medium">All Parts</div>
-                                        <div class="text-xs text-primary-500">View all</div>
                                     </div>
                                 </a>
                             </div>
@@ -99,14 +95,14 @@
             </div>
             
             <!-- Right Side Actions -->
-            <div class="flex items-center space-x-2">
-                <!-- Search - Hidden on small screens -->
+            <div class="flex items-center space-x-1 sm:space-x-2">
+                <!-- Search -->
                 <div class="hidden md:block">
                     <form action="{% url 'shop:product_list' %}" method="get" class="relative">
                         <input type="search" 
                                name="search" 
                                placeholder="Search..." 
-                               class="w-48 lg:w-64 pl-10 pr-4 py-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200" 
+                               class="w-48 lg:w-56 pl-10 pr-4 py-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200" 
                                value="{{ request.GET.search }}">
                         <svg class="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -123,7 +119,7 @@
                 
                 <!-- Theme Toggle -->
                 <button x-on:click="isDark = !isDark" 
-                        class="p-2 rounded-xl text-gray-600 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-800 transition-all duration-200 touch-manipulation" 
+                        class="p-2 rounded-xl text-gray-600 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-800 transition-all duration-200" 
                         aria-label="Toggle theme">
                     <svg x-show="!isDark" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
@@ -135,7 +131,7 @@
                 
                 <!-- Cart -->
                 <div class="relative">
-                    <button class="p-2 rounded-xl text-gray-600 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-800 transition-all duration-200 relative touch-manipulation" 
+                    <button class="p-2 rounded-xl text-gray-600 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-800 transition-all duration-200 relative" 
                             onclick="toggleCart()">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m1.6 8L6 6H3m4 7l-1.5 6M17 21a2 2 0 100-4 2 2 0 000 4z" />
@@ -162,9 +158,9 @@
                                         {% if item.product.images.first %}
                                         <img src="{{ item.product.images.first.image.url }}" 
                                              alt="{{ item.product.name }}" 
-                                             class="w-12 h-12 object-cover rounded-lg">
+                                             class="w-10 h-10 object-cover rounded-lg">
                                         {% else %}
-                                        <div class="w-12 h-12 bg-gray-200 dark:bg-gray-700 rounded-lg flex items-center justify-center">
+                                        <div class="w-10 h-10 bg-gray-200 dark:bg-gray-700 rounded-lg flex items-center justify-center">
                                             <span class="text-gray-400">🔧</span>
                                         </div>
                                         {% endif %}
@@ -200,13 +196,13 @@
                                     </div>
                                 </div>
                             {% else %}
-                                <div class="text-center py-8">
-                                    <div class="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
-                                        <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <div class="text-center py-6">
+                                    <div class="w-12 h-12 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-3">
+                                        <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m1.6 8L6 6H3m4 7l-1.5 6M17 21a2 2 0 100-4 2 2 0 000 4z" />
                                         </svg>
                                     </div>
-                                    <p class="text-gray-500 mb-4">Cart is empty</p>
+                                    <p class="text-gray-500 mb-3">Cart is empty</p>
                                     <a href="{% url 'shop:product_list' %}" class="px-4 py-2 bg-primary-600 text-white rounded-xl hover:bg-primary-700 transition-colors font-medium text-sm">
                                         Shop Now
                                     </a>
@@ -219,7 +215,7 @@
                 <!-- Wishlist -->
                 {% if user.is_authenticated %}
                 <a href="{% url 'shop:wishlist' %}" 
-                   class="p-2 rounded-xl text-gray-600 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-800 transition-all duration-200 touch-manipulation" 
+                   class="p-2 rounded-xl text-gray-600 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-800 transition-all duration-200" 
                    aria-label="Wishlist">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
@@ -230,7 +226,7 @@
                 <!-- User Menu or Auth -->
                 {% if user.is_authenticated %}
                     <div class="relative group">
-                        <button class="flex items-center space-x-2 p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200 touch-manipulation">
+                        <button class="flex items-center space-x-2 p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200">
                             <div class="w-8 h-8 rounded-full bg-gradient-to-br from-primary-500 to-primary-600 text-white flex items-center justify-center text-sm font-medium">
                                 {% if user.profile_picture %}
                                     <img src="{{ user.profile_picture.url }}" alt="{{ user.username }}'s profile" class="w-8 h-8 rounded-full object-cover" />
@@ -241,7 +237,7 @@
                         </button>
                         
                         <!-- User Dropdown -->
-                        <div class="absolute right-0 mt-2 w-64 bg-white dark:bg-gray-800 rounded-2xl shadow-strong border border-gray-200 dark:border-gray-700 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300">
+                        <div class="absolute right-0 mt-2 w-56 bg-white dark:bg-gray-800 rounded-2xl shadow-strong border border-gray-200 dark:border-gray-700 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300">
                             <div class="p-2">
                                 <div class="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
                                     <p class="font-medium text-gray-900 dark:text-white">{{ user.first_name|default:user.username }}</p>
@@ -309,7 +305,7 @@
                     <div class="relative">
                         <input type="search" 
                                name="search" 
-                               placeholder="Search products..." 
+                               placeholder="Search..." 
                                class="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent" 
                                value="{{ request.GET.search }}">
                         <svg class="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -321,33 +317,33 @@
             
             <!-- Mobile Navigation Links -->
             <div class="space-y-2">
-                <a href="{% url 'shop:home' %}" class="flex items-center px-4 py-3 rounded-xl text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors font-medium touch-manipulation">
+                <a href="{% url 'shop:home' %}" class="flex items-center px-4 py-3 rounded-xl text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors font-medium">
                     <span class="mr-3">🏠</span> Home
                 </a>
-                <a href="{% url 'shop:product_list' %}?vehicle=e_bike" class="flex items-center px-4 py-3 rounded-xl text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors font-medium touch-manipulation">
-                    <span class="mr-3">⚡</span> E-Bike Parts
+                <a href="{% url 'shop:product_list' %}?vehicle=e_bike" class="flex items-center px-4 py-3 rounded-xl text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors font-medium">
+                    <span class="mr-3">⚡</span> E-Bike
                 </a>
-                <a href="{% url 'shop:product_list' %}?vehicle=e_scooter" class="flex items-center px-4 py-3 rounded-xl text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors font-medium touch-manipulation">
-                    <span class="mr-3">🛴</span> E-Scooter Parts
+                <a href="{% url 'shop:product_list' %}?vehicle=e_scooter" class="flex items-center px-4 py-3 rounded-xl text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors font-medium">
+                    <span class="mr-3">🛴</span> E-Scooter
                 </a>
-                <a href="{% url 'shop:product_list' %}" class="flex items-center px-4 py-3 rounded-xl text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors font-medium touch-manipulation">
+                <a href="{% url 'shop:product_list' %}" class="flex items-center px-4 py-3 rounded-xl text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors font-medium">
                     <span class="mr-3">🔧</span> All Parts
                 </a>
                 {% if user.is_authenticated %}
-                <a href="{% url 'shop:maintenance_quote' %}" class="flex items-center px-4 py-3 rounded-xl text-purple-600 dark:text-purple-400 hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-colors font-medium touch-manipulation">
+                <a href="{% url 'shop:maintenance_quote' %}" class="flex items-center px-4 py-3 rounded-xl text-purple-600 dark:text-purple-400 hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-colors font-medium">
                     <span class="mr-3">🔧</span> Service
                 </a>
                 {% endif %}
-                <a href="{% url 'shop:contact' %}" class="flex items-center px-4 py-3 rounded-xl text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors font-medium touch-manipulation">
+                <a href="{% url 'shop:contact' %}" class="flex items-center px-4 py-3 rounded-xl text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors font-medium">
                     <span class="mr-3">📧</span> Contact
                 </a>
                 
                 {% if not user.is_authenticated %}
                 <div class="border-t border-gray-200 dark:border-gray-700 pt-4 mt-4">
-                    <a href="{% url 'accounts:login' %}" class="flex items-center px-4 py-3 rounded-xl text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors font-medium touch-manipulation">
+                    <a href="{% url 'accounts:login' %}" class="flex items-center px-4 py-3 rounded-xl text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors font-medium">
                         <span class="mr-3">👤</span> Sign In
                     </a>
-                    <a href="{% url 'accounts:register' %}" class="flex items-center px-4 py-3 rounded-xl bg-primary-600 text-white hover:bg-primary-700 transition-colors font-medium touch-manipulation mt-2">
+                    <a href="{% url 'accounts:register' %}" class="flex items-center px-4 py-3 rounded-xl bg-primary-600 text-white hover:bg-primary-700 transition-colors font-medium mt-2">
                         <span class="mr-3">🚀</span> Get Started
                     </a>
                 </div>

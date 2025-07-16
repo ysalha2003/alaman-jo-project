@@ -6,30 +6,38 @@
 {% block content %}
 <div class="max-w-6xl mx-auto px-4 py-8">
     <!-- Breadcrumb -->
-    <div class="breadcrumbs text-sm mb-8">
-        <ul>
-            <li><a href="{% url 'shop:home' %}">Home</a></li>
-            <li><a href="{% url 'accounts:profile' %}">Profile</a></li>
-            <li>Wishlist</li>
-        </ul>
-    </div>
+    <nav class="flex mb-8" aria-label="Breadcrumb">
+        <ol class="inline-flex items-center space-x-1 md:space-x-3 text-sm">
+            <li>
+                <a href="{% url 'shop:home' %}" class="text-gray-500 hover:text-primary-600 transition-colors">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path>
+                    </svg>
+                </a>
+            </li>
+            <li><svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg></li>
+            <li><a href="{% url 'accounts:profile' %}" class="text-gray-500 hover:text-primary-600 transition-colors">Profile</a></li>
+            <li><svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg></li>
+            <li><span class="text-gray-900 dark:text-white font-medium">Wishlist</span></li>
+        </ol>
+    </nav>
 
     <div class="flex items-center justify-between mb-8">
-        <h1 class="text-3xl font-bold">My Wishlist</h1>
+        <h1 class="text-3xl font-bold text-gray-900 dark:text-white">My Wishlist</h1>
         <span class="text-gray-600 dark:text-gray-400">{{ wishlist_items.count }} item{{ wishlist_items.count|pluralize }}</span>
     </div>
 
     {% if wishlist_items.exists %}
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {% for item in wishlist_items %}
-        <div class="card bg-base-100 shadow-lg hover:shadow-xl transition-all duration-300 group" id="wishlist-item-{{ item.id }}">
-            <figure class="relative overflow-hidden">
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-soft hover:shadow-medium transition-all duration-300 overflow-hidden border border-gray-200 dark:border-gray-700 group" id="wishlist-item-{{ item.id }}">
+            <div class="relative overflow-hidden aspect-square">
                 {% if item.product.images.first %}
                 <img src="{{ item.product.images.first.image.url }}" 
                      alt="{{ item.product.name }}" 
-                     class="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-500">
+                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                 {% else %}
-                <div class="w-full h-64 bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center">
+                <div class="w-full h-full bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-800 flex items-center justify-center">
                     <span class="text-6xl text-gray-400">🔧</span>
                 </div>
                 {% endif %}
@@ -37,23 +45,23 @@
                 <!-- Badges -->
                 <div class="absolute top-4 left-4 flex flex-col gap-2">
                     {% if item.product.is_on_sale %}
-                    <div class="badge badge-error text-white font-bold">
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-bold bg-red-500 text-white shadow-soft">
                         {{ item.product.sale_percentage }}% OFF
-                    </div>
+                    </span>
                     {% endif %}
                     {% if item.product.is_new_arrival %}
-                    <div class="badge badge-success text-white font-bold">NEW</div>
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-bold bg-green-500 text-white shadow-soft">NEW</span>
                     {% endif %}
                     {% if item.product.is_bestseller %}
-                    <div class="badge badge-warning text-white font-bold">BESTSELLER</div>
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-bold bg-orange-500 text-white shadow-soft">BESTSELLER</span>
                     {% endif %}
                 </div>
                 
                 <!-- Remove from wishlist -->
                 <div class="absolute top-4 right-4">
                     <button onclick="removeFromWishlist({{ item.product.id }}, {{ item.id }})" 
-                            class="btn btn-circle btn-sm bg-white/80 hover:bg-white border-0 text-red-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            class="w-10 h-10 bg-white/90 hover:bg-white rounded-full flex items-center justify-center text-red-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-soft hover:shadow-medium">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                         </svg>
                     </button>
@@ -62,67 +70,74 @@
                 <!-- Stock status -->
                 {% if not item.product.is_in_stock %}
                 <div class="absolute inset-0 bg-black/50 flex items-center justify-center">
-                    <span class="badge badge-error text-white font-bold">OUT OF STOCK</span>
+                    <span class="inline-flex items-center px-4 py-2 rounded-full text-sm font-bold bg-red-500 text-white shadow-soft">OUT OF STOCK</span>
                 </div>
                 {% elif item.product.is_low_stock %}
                 <div class="absolute bottom-4 left-4">
-                    <div class="badge badge-warning text-white font-bold">
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-bold bg-orange-500 text-white shadow-soft">
                         ONLY {{ item.product.stock_quantity }} LEFT
-                    </div>
+                    </span>
                 </div>
                 {% endif %}
-            </figure>
+            </div>
             
-            <div class="card-body p-4">
+            <div class="p-6">
                 <!-- Category and Type -->
-                <div class="flex items-center justify-between mb-2">
-                    <span class="badge badge-outline badge-sm">{{ item.product.get_product_type_display }}</span>
+                <div class="flex items-center justify-between mb-3">
+                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-primary-100 text-primary-800 dark:bg-primary-900/20 dark:text-primary-400">
+                        {{ item.product.get_product_type_display }}
+                    </span>
                     <span class="text-xs text-blue-600 dark:text-blue-400 font-medium">
                         {{ item.product.get_vehicle_compatibility_display }}
                     </span>
                 </div>
                 
                 <!-- Product Name -->
-                <h3 class="card-title text-base mb-2 line-clamp-2">
-                    <a href="{{ item.product.get_absolute_url }}" class="hover:text-blue-600 transition-colors">
+                <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2 line-clamp-2">
+                    <a href="{{ item.product.get_absolute_url }}" class="hover:text-primary-600 transition-colors">
                         {{ item.product.brand }} {{ item.product.name }}
                     </a>
                 </h3>
                 
                 <!-- Description -->
-                <p class="text-sm text-gray-600 dark:text-gray-400 mb-3 line-clamp-2">
+                <p class="text-sm text-gray-600 dark:text-gray-400 mb-4 line-clamp-2">
                     {{ item.product.short_description }}
                 </p>
                 
                 <!-- Price and Actions -->
-                <div class="card-actions justify-between items-end">
+                <div class="flex items-center justify-between mb-4">
                     <div class="flex flex-col">
                         {% if item.product.is_on_sale %}
                         <span class="text-lg font-bold text-red-600">€{{ item.product.price }}</span>
                         <span class="text-sm text-gray-500 line-through">€{{ item.product.compare_price }}</span>
                         {% else %}
-                        <span class="text-lg font-bold">€{{ item.product.price }}</span>
+                        <span class="text-lg font-bold text-gray-900 dark:text-white">€{{ item.product.price }}</span>
                         {% endif %}
                     </div>
                     
                     <div class="flex gap-2">
                         {% if item.product.is_in_stock %}
                         <button onclick="addToCart({{ item.product.id }})" 
-                                class="btn btn-primary btn-sm rounded-full">
+                                class="inline-flex items-center px-4 py-2 bg-primary-600 text-white rounded-xl text-sm font-medium hover:bg-primary-700 transition-colors shadow-soft">
                             <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m1.6 8L6 6H3m4 7l-1.5 6M17 21a2 2 0 100-4 2 2 0 000 4z" />
                             </svg>
                             Add to Cart
                         </button>
                         {% else %}
-                        <span class="text-sm text-gray-500">Out of Stock</span>
+                        <span class="text-sm text-gray-500 font-medium">Out of Stock</span>
                         {% endif %}
                     </div>
                 </div>
                 
                 <!-- Added date -->
-                <div class="text-xs text-gray-500 mt-2">
-                    Added {{ item.created_at|timesince }} ago
+                <div class="text-xs text-gray-500 dark:text-gray-400 pt-4 border-t border-gray-200 dark:border-gray-700">
+                    <div class="flex items-center">
+                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        Added {{ item.created_at|timesince }} ago
+                    </div>
                 </div>
             </div>
         </div>
@@ -132,7 +147,10 @@
     <!-- Continue Shopping -->
     <div class="text-center mt-12">
         <a href="{% url 'shop:product_list' %}" 
-           class="btn btn-outline btn-lg rounded-full px-8">
+           class="inline-flex items-center px-8 py-3 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-xl font-medium hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+            </svg>
             Continue Shopping
         </a>
     </div>
@@ -145,12 +163,15 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
             </svg>
         </div>
-        <h2 class="text-2xl font-bold mb-4">Your wishlist is empty</h2>
-        <p class="text-gray-600 dark:text-gray-400 mb-8">
+        <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">Your wishlist is empty</h2>
+        <p class="text-gray-600 dark:text-gray-400 mb-8 max-w-md mx-auto">
             Save items you love for later by clicking the heart icon on any product
         </p>
         <a href="{% url 'shop:product_list' %}" 
-           class="btn btn-primary">
+           class="inline-flex items-center px-8 py-3 bg-primary-600 text-white rounded-xl font-semibold hover:bg-primary-700 transition-colors shadow-soft">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+            </svg>
             Start Shopping
         </a>
     </div>
@@ -232,30 +253,34 @@ function addToCart(productId) {
 
 // Utility functions
 function showNotification(message, type) {
-    const toast = document.createElement('div');
-    toast.className = `alert ${type === 'success' ? 'alert-success' : 'alert-error'} fixed top-4 right-4 z-50 w-auto max-w-sm`;
-    toast.innerHTML = `
-        <span>${message}</span>
-        <button onclick="this.parentElement.remove()" class="btn btn-sm btn-circle">✕</button>
-    `;
-    document.body.appendChild(toast);
-    
-    setTimeout(() => {
-        if (toast.parentElement) {
-            toast.remove();
-        }
-    }, 5000);
+    if (window.AlamanaUtils) {
+        window.AlamanaUtils.showToast(message, type);
+    } else {
+        // Fallback notification
+        const notification = document.createElement('div');
+        notification.className = `fixed top-4 right-4 z-50 px-6 py-4 rounded-xl shadow-xl ${
+            type === 'success' ? 'bg-green-500' : 'bg-red-500'
+        } text-white max-w-sm`;
+        notification.innerHTML = `
+            <div class="flex items-center">
+                <span class="mr-2">${type === 'success' ? '✅' : '❌'}</span>
+                <span>${message}</span>
+                <button onclick="this.parentElement.parentElement.remove()" class="ml-4 text-white/80 hover:text-white">×</button>
+            </div>
+        `;
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.remove();
+        }, 5000);
+    }
 }
 
 function updateCartCounter(count) {
     const counter = document.querySelector('.cart-counter');
     if (counter) {
         counter.textContent = count;
-        if (count > 0) {
-            counter.style.display = 'block';
-        } else {
-            counter.style.display = 'none';
-        }
+        counter.style.display = count > 0 ? 'flex' : 'none';
     }
 }
 </script>

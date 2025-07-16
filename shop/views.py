@@ -481,10 +481,16 @@ def cart_detail(request):
 
     # Calculate totals
     subtotal = cart.total_price
-    shipping_cost = Decimal('15.00') if subtotal < Decimal('100.00') else Decimal('0.00')
+    free_shipping_threshold = Decimal('100.00')
+    shipping_cost = Decimal('15.00') if subtotal < free_shipping_threshold else Decimal('0.00')
     tax_rate = Decimal('0.21')  # 21% VAT
     tax_amount = subtotal * tax_rate
     total_amount = subtotal + shipping_cost + tax_amount
+    free_shipping_remaining = max(Decimal('0'), free_shipping_threshold - subtotal)
+    free_shipping_progress = 0
+    if free_shipping_threshold > 0:
+        free_shipping_progress = min((subtotal / free_shipping_threshold) * 100, 100)
+
 
     # Get recommended products based on cart contents
     recommended_products = []
@@ -509,8 +515,9 @@ def cart_detail(request):
         'tax_amount': tax_amount,
         'total_amount': total_amount,
         'recommended_products': recommended_products,
-        'free_shipping_threshold': Decimal('100.00'),
-        'free_shipping_remaining': max(Decimal('0'), Decimal('100.00') - subtotal),
+        'free_shipping_threshold': free_shipping_threshold,
+        'free_shipping_remaining': free_shipping_remaining,
+        'free_shipping_progress': free_shipping_progress,
     }
 
     return render(request, 'shop/cart.html', context)

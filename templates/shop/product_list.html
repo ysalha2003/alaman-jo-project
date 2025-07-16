@@ -38,8 +38,8 @@
         </ol>
     </nav>
 
-    <!-- Header -->
-    <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-6">
+    <!-- Header with Filters Toggle -->
+    <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-6 gap-4">
         <div>
             <h1 class="text-2xl md:text-3xl font-bold mb-2">
                 {% if current_filters.search %}
@@ -60,31 +60,72 @@
         </div>
         
         <!-- Controls -->
-        <div class="flex flex-col sm:flex-row gap-4 mt-4 lg:mt-0">
+        <div class="flex flex-col sm:flex-row gap-3">
+            <!-- Mobile Filter Toggle -->
+            <button onclick="toggleFilters()" class="lg:hidden inline-flex items-center justify-center px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-xl text-gray-700 dark:text-gray-300 font-medium hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4" />
+                </svg>
+                Filters
+            </button>
+            
             <!-- Sort Dropdown -->
-            <select onchange="applySort(this.value)" class="px-4 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 rounded-lg text-sm focus:ring-2 focus:ring-primary-500">
+            <select onchange="applySort(this.value)" class="px-4 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 rounded-xl text-sm focus:ring-2 focus:ring-primary-500 focus:outline-none">
                 <option value="newest" {% if current_filters.sort == 'newest' %}selected{% endif %}>Newest First</option>
                 <option value="price_low" {% if current_filters.sort == 'price_low' %}selected{% endif %}>Price: Low to High</option>
                 <option value="price_high" {% if current_filters.sort == 'price_high' %}selected{% endif %}>Price: High to Low</option>
                 <option value="name" {% if current_filters.sort == 'name' %}selected{% endif %}>Name A-Z</option>
             </select>
             
-            <!-- Mobile Filter Toggle -->
-            <button onclick="toggleFilters()" class="lg:hidden px-4 py-2 bg-primary-600 text-white rounded-lg text-sm font-medium">
-                <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4" />
-                </svg>
-                Filters
-            </button>
+            <!-- View Toggle -->
+            <div class="hidden sm:flex border border-gray-300 dark:border-gray-600 rounded-xl overflow-hidden">
+                <button onclick="setGridView('grid')" id="grid-view-btn" class="px-3 py-2 bg-primary-600 text-white transition-colors">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                    </svg>
+                </button>
+                <button onclick="setGridView('list')" id="list-view-btn" class="px-3 py-2 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 transition-colors">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+                    </svg>
+                </button>
+            </div>
         </div>
     </div>
 
     <div class="flex flex-col lg:flex-row gap-6">
-        <!-- Filters Sidebar -->
+        <!-- Mobile Filter Overlay -->
+        <div id="filter-overlay" class="fixed inset-0 z-50 lg:hidden hidden">
+            <div class="fixed inset-0 bg-black/50 backdrop-blur-sm" onclick="toggleFilters()"></div>
+            <div class="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 rounded-t-3xl shadow-2xl transform translate-y-full transition-transform duration-300" id="filter-panel">
+                <div class="p-6 max-h-[80vh] overflow-y-auto">
+                    <!-- Filter content will be moved here on mobile -->
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-xl font-bold">Filters</h3>
+                        <button onclick="toggleFilters()" class="p-2 rounded-xl text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+                    <div id="mobile-filters-content"></div>
+                    <div class="flex gap-3 mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
+                        <button onclick="clearFilters()" class="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                            Clear All
+                        </button>
+                        <button onclick="applyFilters()" class="flex-1 px-4 py-2 bg-primary-600 text-white rounded-xl hover:bg-primary-700 transition-colors">
+                            Apply Filters
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Desktop Filters Sidebar -->
         <div id="filters-sidebar" class="w-full lg:w-64 flex-shrink-0 hidden lg:block">
-            <div class="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm border border-gray-200 dark:border-gray-700 sticky top-20">
-                <div class="flex items-center justify-between mb-4">
-                    <h3 class="font-semibold">Filters</h3>
+            <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-soft border border-gray-200 dark:border-gray-700 sticky top-24">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="text-lg font-semibold">Filters</h3>
                     <a href="{% url 'shop:product_list' %}" class="text-sm text-primary-600 hover:text-primary-700">Clear All</a>
                 </div>
                 
@@ -93,100 +134,110 @@
                     {% if current_filters.search %}<input type="hidden" name="search" value="{{ current_filters.search }}">{% endif %}
                     
                     <!-- Vehicle Types -->
-                    <div>
-                        <h4 class="font-medium text-gray-900 dark:text-white mb-3">Vehicle Type</h4>
-                        <div class="space-y-2">
+                    <div class="filter-group">
+                        <h4 class="filter-title">Vehicle Type</h4>
+                        <div class="space-y-3">
                             {% for vehicle_value, vehicle_label in vehicle_types %}
-                            <label class="flex items-center">
+                            <label class="flex items-center cursor-pointer group">
                                 <input type="radio" name="vehicle" value="{{ vehicle_value }}" 
                                        {% if current_filters.vehicle == vehicle_value %}checked{% endif %} 
                                        onchange="this.form.submit()"
                                        class="w-4 h-4 text-primary-600 border-gray-300 focus:ring-primary-500 mr-3">
-                                <span class="text-sm">{{ vehicle_label }}</span>
+                                <span class="text-sm group-hover:text-primary-600 transition-colors">{{ vehicle_label }}</span>
                             </label>
                             {% endfor %}
                         </div>
                     </div>
 
-                    <!-- In Stock -->
-                    <div>
-                        <h4 class="font-medium text-gray-900 dark:text-white mb-3">Availability</h4>
-                        <label class="flex items-center">
+                    <!-- Availability -->
+                    <div class="filter-group">
+                        <h4 class="filter-title">Availability</h4>
+                        <label class="flex items-center cursor-pointer group">
                             <input type="checkbox" name="in_stock" value="true" 
                                    {% if current_filters.in_stock_only %}checked{% endif %} 
                                    onchange="this.form.submit()"
-                                   class="w-4 h-4 text-primary-600 border-gray-300 focus:ring-primary-500 mr-3">
-                            <span class="text-sm">In Stock Only</span>
+                                   class="w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500 mr-3">
+                            <span class="text-sm group-hover:text-primary-600 transition-colors">In Stock Only</span>
                         </label>
                     </div>
                     
                     <!-- Price Range -->
                     {% if price_range.min_price and price_range.max_price %}
-                    <div>
-                        <h4 class="font-medium text-gray-900 dark:text-white mb-3">Price Range</h4>
-                        <div class="grid grid-cols-2 gap-2">
-                            <input type="number" name="min_price" placeholder="Min €" 
-                                   value="{{ current_filters.min_price|default:'' }}" 
-                                   class="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
-                            <input type="number" name="max_price" placeholder="Max €" 
-                                   value="{{ current_filters.max_price|default:'' }}" 
-                                   class="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+                    <div class="filter-group">
+                        <h4 class="filter-title">Price Range</h4>
+                        <div class="space-y-3">
+                            <div class="grid grid-cols-2 gap-2">
+                                <input type="number" name="min_price" placeholder="Min â‚¬" 
+                                       value="{{ current_filters.min_price|default:'' }}" 
+                                       class="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:outline-none">
+                                <input type="number" name="max_price" placeholder="Max â‚¬" 
+                                       value="{{ current_filters.max_price|default:'' }}" 
+                                       class="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:outline-none">
+                            </div>
+                            <button type="submit" class="w-full px-4 py-2 bg-primary-600 text-white rounded-lg text-sm font-medium hover:bg-primary-700 transition-colors">Apply</button>
                         </div>
-                        <button type="submit" class="w-full mt-2 px-4 py-2 bg-primary-600 text-white rounded-lg text-sm font-medium hover:bg-primary-700">Apply</button>
                     </div>
                     {% endif %}
                 </form>
             </div>
         </div>
 
-        <!-- Products Grid -->
+        <!-- Products Grid/List -->
         <div class="flex-1">
             {% if page_obj.object_list %}
-            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+            <div id="products-container" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
                 {% for product in page_obj.object_list %}
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden border border-gray-200 dark:border-gray-700 group">
+                <div class="product-card group bg-white dark:bg-gray-800 rounded-2xl shadow-soft hover:shadow-strong transition-all duration-300 hover:-translate-y-1 overflow-hidden border border-gray-200 dark:border-gray-700">
                     
                     <a href="{{ product.get_absolute_url }}" class="block relative aspect-square overflow-hidden">
                         {% if product.primary_image %}
                         <img src="{{ product.primary_image.image.url }}" alt="{{ product.name }}" 
-                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy">
+                             class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" loading="lazy">
                         {% else %}
-                        <div class="w-full h-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
-                            <span class="text-2xl text-gray-400">🔧</span>
+                        <div class="w-full h-full bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-800 flex items-center justify-center">
+                            <span class="text-3xl text-gray-400">ðŸ”§</span>
                         </div>
                         {% endif %}
                         
                         <!-- Badges -->
                         <div class="absolute top-2 left-2 flex flex-col gap-1">
                             {% if product.is_on_sale %}
-                            <span class="bg-red-500 text-white px-2 py-1 rounded text-xs font-bold">{{ product.sale_percentage }}% OFF</span>
+                            <span class="bg-red-500 text-white px-2 py-1 rounded-full text-xs font-bold shadow-soft">{{ product.sale_percentage }}% OFF</span>
                             {% endif %}
                             {% if not product.is_in_stock %}
-                            <span class="bg-gray-500 text-white px-2 py-1 rounded text-xs font-bold">OUT OF STOCK</span>
+                            <span class="bg-gray-500 text-white px-2 py-1 rounded-full text-xs font-bold shadow-soft">OUT OF STOCK</span>
                             {% endif %}
                         </div>
                         
-                        <!-- Quick Add Wishlist -->
-                        {% if user.is_authenticated %}
-                        <button onclick="event.preventDefault(); addToWishlist({{ product.id }})" 
-                                class="absolute top-2 right-2 w-8 h-8 bg-white/80 hover:bg-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                            <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                            </svg>
-                        </button>
-                        {% endif %}
+                        <!-- Quick Actions -->
+                        <div class="absolute top-2 right-2 flex flex-col gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            {% if user.is_authenticated %}
+                            <button onclick="event.preventDefault(); addToWishlist({{ product.id }})" 
+                                    class="w-8 h-8 bg-white/90 hover:bg-white rounded-full flex items-center justify-center shadow-soft hover:shadow-medium transition-all duration-200">
+                                <svg class="w-4 h-4 text-gray-600 hover:text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                                </svg>
+                            </button>
+                            {% endif %}
+                            <button onclick="event.preventDefault(); quickView({{ product.id }})" 
+                                    class="w-8 h-8 bg-white/90 hover:bg-white rounded-full flex items-center justify-center shadow-soft hover:shadow-medium transition-all duration-200">
+                                <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                </svg>
+                            </button>
+                        </div>
                     </a>
                     
                     <div class="p-3 md:p-4">
                         <!-- Product Type -->
                         <div class="flex items-center justify-between mb-2">
-                            <span class="text-xs text-primary-600 bg-primary-50 dark:bg-primary-900/20 px-2 py-1 rounded">{{ product.get_product_type_display }}</span>
+                            <span class="text-xs text-primary-600 bg-primary-50 dark:bg-primary-900/20 px-2 py-1 rounded-full font-medium">{{ product.get_product_type_display }}</span>
                             <span class="text-xs text-gray-500">{{ product.get_vehicle_compatibility_display }}</span>
                         </div>
                         
                         <!-- Product Name -->
-                        <h3 class="font-semibold text-sm md:text-base mb-2 line-clamp-2">
-                            <a href="{{ product.get_absolute_url }}" class="text-gray-900 dark:text-white hover:text-primary-600 transition-colors">
+                        <h3 class="font-semibold text-sm md:text-base mb-2 line-clamp-2 group-hover:text-primary-600 transition-colors">
+                            <a href="{{ product.get_absolute_url }}">
                                 {{ product.brand }} {{ product.name }}
                             </a>
                         </h3>
@@ -195,16 +246,16 @@
                         <div class="flex items-center justify-between">
                             <div>
                                 {% if product.is_on_sale %}
-                                <span class="text-lg font-bold text-red-600">€{{ product.price }}</span>
-                                <span class="text-sm text-gray-500 line-through ml-1">€{{ product.compare_price }}</span>
+                                <span class="text-lg font-bold text-red-600">â‚¬{{ product.price }}</span>
+                                <span class="text-sm text-gray-500 line-through ml-1">â‚¬{{ product.compare_price }}</span>
                                 {% else %}
-                                <span class="text-lg font-bold text-gray-900 dark:text-white">€{{ product.price }}</span>
+                                <span class="text-lg font-bold text-gray-900 dark:text-white">â‚¬{{ product.price }}</span>
                                 {% endif %}
                             </div>
                             
                             {% if product.is_in_stock %}
                             <button onclick="addToCart({{ product.id }})" 
-                                    class="px-3 py-1.5 bg-primary-600 text-white rounded-lg text-sm font-medium hover:bg-primary-700 transition-colors">
+                                    class="px-3 py-1.5 bg-primary-600 text-white rounded-lg text-sm font-medium hover:bg-primary-700 transition-colors shadow-soft">
                                 Add
                             </button>
                             {% endif %}
@@ -250,7 +301,7 @@
                 </div>
                 <h3 class="text-xl font-semibold mb-2">No products found</h3>
                 <p class="text-gray-600 dark:text-gray-400 mb-6">Try adjusting your filters or search terms.</p>
-                <a href="{% url 'shop:product_list' %}" class="px-6 py-3 bg-primary-600 text-white rounded-lg font-medium hover:bg-primary-700 transition-colors">
+                <a href="{% url 'shop:product_list' %}" class="px-6 py-3 bg-primary-600 text-white rounded-xl font-medium hover:bg-primary-700 transition-colors shadow-soft">
                     View All Products
                 </a>
             </div>
@@ -259,11 +310,52 @@
     </div>
 </div>
 
+<!-- Quick View Modal Structure -->
+<div id="quick-view-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
+    <div class="fixed inset-0 bg-black/60 backdrop-blur-sm" onclick="closeQuickView()"></div>
+    <div class="relative w-full max-w-5xl max-h-[90vh] bg-white dark:bg-gray-800 rounded-3xl shadow-2xl overflow-hidden flex flex-col transform scale-95 transition-transform duration-300">
+        <div class="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700 flex-shrink-0">
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Quick View</h3>
+            <button onclick="closeQuickView()" class="p-2 rounded-xl text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+        <div id="quick-view-content" class="flex-1 overflow-y-auto">
+            <!-- Loading Spinner -->
+            <div class="flex items-center justify-center h-full">
+                <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
+// Enhanced mobile filters
 function toggleFilters() {
-    document.getElementById('filters-sidebar').classList.toggle('hidden');
+    const overlay = document.getElementById('filter-overlay');
+    const panel = document.getElementById('filter-panel');
+    const filtersContent = document.getElementById('filters-sidebar').innerHTML;
+    const mobileContent = document.getElementById('mobile-filters-content');
+    
+    if (overlay.classList.contains('hidden')) {
+        mobileContent.innerHTML = filtersContent;
+        overlay.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+        setTimeout(() => {
+            panel.classList.remove('translate-y-full');
+        }, 10);
+    } else {
+        panel.classList.add('translate-y-full');
+        setTimeout(() => {
+            overlay.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }, 300);
+    }
 }
 
+// Sort functionality
 function applySort(value) {
     const url = new URL(window.location);
     url.searchParams.set('sort', value);
@@ -271,7 +363,64 @@ function applySort(value) {
     window.location.href = url.toString();
 }
 
-async function addToCart(productId) {
+// Grid view toggle
+function setGridView(view) {
+    const container = document.getElementById('products-container');
+    const gridBtn = document.getElementById('grid-view-btn');
+    const listBtn = document.getElementById('list-view-btn');
+    
+    // This is primarily a visual preference and would require more complex template changes to render a true "list" view.
+    if (view === 'grid') {
+        gridBtn.classList.add('bg-primary-600', 'text-white');
+        gridBtn.classList.remove('bg-white', 'dark:bg-gray-800', 'text-gray-700', 'dark:text-gray-300');
+        listBtn.classList.add('bg-white', 'dark:bg-gray-800', 'text-gray-700', 'dark:text-gray-300');
+        listBtn.classList.remove('bg-primary-600', 'text-white');
+    } else {
+        listBtn.classList.add('bg-primary-600', 'text-white');
+        listBtn.classList.remove('bg-white', 'dark:bg-gray-800', 'text-gray-700', 'dark:text-gray-300');
+        gridBtn.classList.add('bg-white', 'dark:bg-gray-800', 'text-gray-700', 'dark:text-gray-300');
+        gridBtn.classList.remove('bg-primary-600', 'text-white');
+    }
+}
+
+// Quick view functionality
+function quickView(productId) {
+    const modal = document.getElementById('quick-view-modal');
+    const content = document.getElementById('quick-view-content');
+    const modalContainer = modal.querySelector('.transform');
+    
+    modal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+    
+    setTimeout(() => {
+        modalContainer.classList.remove('scale-95');
+    }, 10);
+    
+    content.innerHTML = '<div class="flex items-center justify-center h-full p-8"><div class="animate-spin rounded-full h-10 w-10 border-b-2 border-primary-600"></div></div>';
+    
+    fetch(`{% url 'shop:product_quick_view' 0 %}`.replace('0', productId))
+        .then(response => response.text())
+        .then(html => {
+            content.innerHTML = html;
+        })
+        .catch(error => {
+            content.innerHTML = '<div class="text-center text-red-600 p-8">Error loading product details. Please try again.</div>';
+        });
+}
+
+function closeQuickView() {
+    const modal = document.getElementById('quick-view-modal');
+    const modalContainer = modal.querySelector('.transform');
+    
+    modalContainer.classList.add('scale-95');
+    setTimeout(() => {
+        modal.classList.add('hidden');
+        document.body.style.overflow = 'auto';
+    }, 300);
+}
+
+// Global cart and wishlist functions
+async function addToCart(productId, quantity = 1) {
     try {
         const response = await fetch('{% url "shop:add_to_cart" %}', {
             method: 'POST',
@@ -280,7 +429,7 @@ async function addToCart(productId) {
                 'Content-Type': 'application/json',
                 'X-Requested-With': 'XMLHttpRequest'
             },
-            body: JSON.stringify({ product_id: productId, quantity: 1 })
+            body: JSON.stringify({ product_id: productId, quantity: parseInt(quantity) })
         });
         const data = await response.json();
         if (data.success) {
@@ -325,5 +474,15 @@ function updateCartCounter(count) {
         counter.style.display = count > 0 ? 'flex' : 'none';
     }
 }
+
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        closeQuickView();
+        const filterOverlay = document.getElementById('filter-overlay');
+        if (!filterOverlay.classList.contains('hidden')) {
+            toggleFilters();
+        }
+    }
+});
 </script>
 {% endblock content %}

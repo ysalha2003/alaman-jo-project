@@ -1,0 +1,74 @@
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 p-4 sm:p-6">
+    <!-- Image Gallery -->
+    <div class="space-y-3">
+        <div class="aspect-square bg-gray-100 dark:bg-gray-700 rounded-2xl overflow-hidden">
+            {% if product.images.exists %}
+                <img id="quick-view-main-image" src="{{ product.primary_image.image.url }}" alt="{{ product.primary_image.alt_text }}" class="w-full h-full object-cover">
+            {% else %}
+                <div class="w-full h-full flex items-center justify-center">
+                    <span class="text-4xl text-gray-400">ðŸ”§</span>
+                </div>
+            {% endif %}
+        </div>
+        {% if product.images.count > 1 %}
+        <div class="grid grid-cols-4 gap-2">
+            {% for image in product.images.all %}
+            <button onclick="document.getElementById('quick-view-main-image').src='{{ image.image.url }}'" class="aspect-square rounded-lg overflow-hidden border-2 border-transparent hover:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500">
+                <img src="{{ image.image.url }}" alt="{{ image.alt_text }}" class="w-full h-full object-cover">
+            </button>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Product Info -->
+    <div class="space-y-4 flex flex-col">
+        <div>
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-white">{{ product.brand }} {{ product.name }}</h2>
+            <a href="{{ product.get_absolute_url }}" class="text-sm text-primary-600 hover:underline">View Full Details â†’</a>
+        </div>
+        
+        <p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed line-clamp-4">
+            {{ product.short_description }}
+        </p>
+
+        <!-- Price -->
+        <div class="flex items-baseline space-x-2">
+            {% if product.is_on_sale %}
+                <span class="text-3xl font-bold text-red-600">â‚¬{{ product.price }}</span>
+                <span class="text-xl text-gray-500 line-through">â‚¬{{ product.compare_price }}</span>
+            {% else %}
+                <span class="text-3xl font-bold text-gray-900 dark:text-white">â‚¬{{ product.price }}</span>
+            {% endif %}
+        </div>
+        
+        <!-- Stock Status -->
+        <div>
+            {% if product.is_in_stock %}
+                <div class="flex items-center text-sm font-medium text-green-600">
+                    <svg class="w-5 h-5 mr-1" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                    In Stock
+                </div>
+            {% else %}
+                <div class="flex items-center text-sm font-medium text-red-600">
+                    <svg class="w-5 h-5 mr-1" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path></svg>
+                    Out of Stock
+                </div>
+            {% endif %}
+        </div>
+        
+        <div class="flex-grow"></div>
+
+        {% if product.is_in_stock %}
+        <div class="flex flex-col sm:flex-row gap-3 pt-4 border-t border-gray-200 dark:border-gray-700">
+            <div class="flex-shrink-0">
+                <input type="number" id="quick-view-quantity" value="1" min="1" max="{{ product.stock_quantity }}" class="w-24 px-3 py-3 border border-gray-300 dark:border-gray-600 rounded-xl text-center focus:ring-2 focus:ring-primary-500 focus:outline-none">
+            </div>
+            <button onclick="addToCart({{ product.id }}, document.getElementById('quick-view-quantity').value)" 
+                    class="flex-1 px-6 py-3 bg-primary-600 text-white rounded-xl font-semibold hover:bg-primary-700 transition-colors">
+                Add to Cart
+            </button>
+        </div>
+        {% endif %}
+    </div>
+</div>
